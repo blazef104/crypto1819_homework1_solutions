@@ -1,0 +1,133 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{framed}
+\usepackage{amsmath}
+%\input{macro.tex}
+
+\newcounter{t0d0_counter}
+\newcommand{\notodo}[1]{
+}
+\newcommand{\todo}[1]{
+  \stepcounter{t0d0_counter}
+  \definecolor{shadecolor}{rgb}{1,1,0} % this is yellow
+  \begin{shaded}
+  T0D0 \arabic{t0d0_counter}: #1
+  \end{shaded}
+}
+
+
+\title{\textbf{Cryptography Homework 1}\\ {\normalsize (Solutions)}}
+\author{NOME}
+\date{}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Perfect Secrecy}
+
+\todo{Image of the game, review the demonstration we have done}
+
+From the definition we have that Pr[Game=1]=1/2
+
+Now $$\forall m_0,m_1 \in M, \forall c \in C $$
+
+ $$ Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $$
+ $$ Pr[Game=1 | b=0]Pr[b=0]+Pr[Game=1 | b=1]Pr[b=1] $$
+ $$  $$
+
+\section{Universal Hashing}
+ \todo{Maybe we should try and go through all what we have done so far}
+ (a)
+
+ (i) $$ \sum_{1=0}^t{Pr[h_s(x_i)=y_i]} = \sum_{i=0}^{t-1}{(Pr[h_s(x_i)=y_i])}+Pr[h_s(x_t)=y_t]$$
+     $$  $$
+
+ (ii) $$ Pr[h_s(x_0)=y \wedge h_s(x_1)=y \wedge h_s(x_2)=y] = \frac{1}{|y^3|} $$
+      
+Now for 3 different x: $x_0 \neq x_1 \neq x_2$ the corresponding hash functions are as follows:
+
+$$ h_s(x_0) = S_0 + S_1x_0 + S_2x_0^2 $$
+$$ h_s(x_1) = S_0 + S_1x_1 + S_2x_1^2 $$
+$$ h_s(x_2) = S_0 + S_1x_2 + S_2x_2^2 $$
+
+$$ Pr_{(S_0,S_1,S_2)\gets Z_q^3}[h(x_0)= \varphi \wedge h(x_1)=\varphi \prime \wedge h(x_2)=\varphi \prime \prime]=$$
+
+$$=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[S_0+S_1x_0+S_2x_0^2=\varphi \wedge S_0+S_1x_1+S_2x_1^2=\varphi \prime \wedge S_0+S_1x_2+S_2x_2^2=\varphi \prime \prime] $$
+
+
+\[
+=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[
+\begin{pmatrix}
+	1 & x_0 & x_0^2 \\
+	1 & x_1 & x_1^2 \\
+	1 & x_2 & x_2^2
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+	S_0 \\
+	S_1\\
+	S_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+\varphi \\
+\varphi \prime \\
+\varphi \prime \prime
+\end{pmatrix}
+]=
+\]
+
+\[
+=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[
+\begin{pmatrix}
+	S_0 \\
+	S_1\\
+	S_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+	1 & x_0 & x_0^2 \\
+	1 & x_1 & x_1^2 \\
+	1 & x_2 & x_2^2
+\end{pmatrix}^{-1}
+\cdot
+\begin{pmatrix}
+\varphi \\
+\varphi \prime \\
+\varphi \prime \prime
+\end{pmatrix}
+]=
+\]
+
+$$= \frac{1}{|Z_q^3|}=\frac{1}{q^3}$$
+
+(b)
+
+From the exercise: $ l = 128 $ what is the minimal min-entropy to achieve $\varepsilon = 2^{-80}$?
+
+$$128 \leq k-(2log2^{80} -2)$$
+$$k \geq 286$$
+
+Entropy loss: $\delta = 158$
+
+If $ k = 238 $ what is the maximum amount of uniform randomness with $\varepsilon = 2^{-80}$?
+
+$$l \leq 238-(2log2^{80}-2)$$
+$$l \leq 60$$
+
+Making computational assumptions explain how to obtain $ l = 320 $
+
+\section{One-Way Functions}
+\todo{}
+\section{Pseudorandom Generators}
+\todo{}
+\section{Pseudorandom Functions}
+\todo{}
+\section{Secret Key Encryption}
+\todo{}
+\section{Message Authentication}
+\todo{}
+\end{document}
