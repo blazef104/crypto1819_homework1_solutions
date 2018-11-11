@@ -18,7 +18,7 @@
 
 
 \title{\textbf{Cryptography Homework 1}\\ {\normalsize (Solutions)}}
-\author{NOME}
+\author{Giulio Ginesi}
 \date{}
 
 
@@ -30,20 +30,36 @@
 
 \todo{Image of the game, review the demonstration we have done}
 
-From the definition we have that Pr[Game=1]=1/2
+We want to prove that (a) $Pr[Game_{\pi,A}^{eav}=1]=\frac{1}2$ is perfectly secret. 
+Let's use the last one of the 3 properties we saw in class: 
 
-Now $$\forall m_0,m_1 \in M, \forall c \in C $$
+(b) $Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $.
 
- $$ Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $$
- $$ Pr[Game=1 | b=0]Pr[b=0]+Pr[Game=1 | b=1]Pr[b=1] $$
- $$  $$
+We want to prove that $a \implies b$ and also $ b \implies a $
+\bigskip
+$a \implies b$
+
+$\forall m_0,m_1 \in M, \forall c \in C $ we can rewrite the second equation using Game: 
+
+$$ Pr[Game=1 | b=0]Pr[b=0]=Pr[Game=1 | b=1]Pr[b=1] $$
+
+Since Game and b are independent we can use Bayes as follows:
+
+$$\Rightarrow \frac{Pr[Game_{\pi, A}^{eav}=1]Pr[b=0]}{Pr[b=0]}Pr[b=0]=\frac{Pr[Game_{\pi, A}^{eav}=1]Pr[b=1]}{Pr[b=1]}Pr[b=1]$$
+$$\Rightarrow Pr[Game_{\pi, A}^{eav}=1]Pr[b=0]=Pr[Game_{\pi, A}^{eav}=1]Pr[b=1]$$
+
+
 
 \section{Universal Hashing}
  \todo{Maybe we should try and go through all what we have done so far}
  (a)
 
- (i) $$ \sum_{1=0}^t{Pr[h_s(x_i)=y_i]} = \sum_{i=0}^{t-1}{(Pr[h_s(x_i)=y_i])}+Pr[h_s(x_t)=y_t]$$
-     $$  $$
+ (i)  
+ We can prove that $t-wise \implies (t-1)-wise$ just by writing down the notion of $t$-wise independence.
+
+ $$ \sum_{1=0}^t{Pr[h_s(x_i)=y_i]} = \sum_{i=0}^{t-1}{(Pr[h_s(x_i)=y_i])}+Pr[h_s(x_t)=y_t]$$
+
+ From the above equation we can see that the $t-1$-wise independence is contained in the $t$ wise one. 
 
  (ii) $$ Pr[h_s(x_0)=y \wedge h_s(x_1)=y \wedge h_s(x_2)=y] = \frac{1}{|y^3|} $$
       
@@ -55,7 +71,7 @@ $$ h_s(x_2) = S_0 + S_1x_2 + S_2x_2^2 $$
 
 $$ Pr_{(S_0,S_1,S_2)\gets Z_q^3}[h(x_0)= \varphi \wedge h(x_1)=\varphi \prime \wedge h(x_2)=\varphi \prime \prime]=$$
 
-$$=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[S_0+S_1x_0+S_2x_0^2=\varphi \wedge S_0+S_1x_1+S_2x_1^2=\varphi \prime \wedge S_0+S_1x_2+S_2x_2^2=\varphi \prime \prime] $$
+$$=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[S_0+S_1x_0+S_2x_0^2=\varphi \wedge S_0+S_1x_1+S_2x_1^2=\varphi \prime \wedge S_0+S_1x_2+S_2x_2^2=\varphi \prime \prime]=$$
 
 
 \[
@@ -106,22 +122,61 @@ $$= \frac{1}{|Z_q^3|}=\frac{1}{q^3}$$
 
 (b)
 
-From the exercise: $ l = 128 $ what is the minimal min-entropy to achieve $\varepsilon = 2^{-80}$?
+(i) $ l = 128 $ what is the minimal min-entropy to achieve $\varepsilon = 2^{-80}$?
 
 $$128 \leq k-(2log2^{80} -2)$$
 $$k \geq 286$$
 
 Entropy loss: $\delta = 158$
 
+(ii)
+
 If $ k = 238 $ what is the maximum amount of uniform randomness with $\varepsilon = 2^{-80}$?
 
 $$l \leq 238-(2log2^{80}-2)$$
-$$l \leq 60$$
+$$l \leq 80$$
 
 Making computational assumptions explain how to obtain $ l = 320 $
 
+Let's assume a larg enough $\varepsilon = 2^{-128}$ then our $k$ will be:
+$$320 \leq k - (2log2^{128}-2)$$
+$$k \geq 574$$ 
+
+\todo{Review computational assumptions}
+
 \section{One-Way Functions}
+(a)
 \todo{}
+(b) \\
+(i) By contraddiction assume that $\exists$ an adversary $A_g$ that is able to invert $g$ with non negligible probability.
+We will then have:
+$$ Pr[g(x \prime || j)=y : x \leftarrow\$ \{0,1\}^n, y\prime = g(x), |j|=log n, x\prime \leftarrow\$A_g(1^{\lambda)},y)] \geq \frac{1}{p(\lambda)}$$
+We can also define another adversary $A_f$ which is able to invert $f$ with non negligible probability such that:
+$$ A_f(y)=(A_g(y,j,x_j))$$
+Note that $A_g$ reveals $g$ when taking $(y,j,x_j)$ as input and in the same way, $A_f$ reveals $f$ on input $y$.
+Thereofre $A_f$ leaks f (on input $y$) with the same probability of $A_g$ which is non negligible. $\implies$ Contraddiction.
+
+\todo{Review the part (ii) it is a bit over complicated}
+(ii) Let $g$ be a OWF then define $f$ as follows:
+$$ f(U_{n+logn})=f(U_n,U_{log n})=g(U_n),U_{log n},[U_n]_{U_{log n}}$$
+where $[x\prime]_i$ denote the $i^{th}$ bit of $x\prime$.
+In words, f receives an input on length $n+log n$ and outputs $g$ applied to the first $n$ bits, together with $i$ and the $i^{th}$ bit if the input ( $i$ is the value in the last $log n$ bits of the input).\\
+Fix $i$, we construct an $A_i$ s.t. $A_i(f(x\prime))$ outputs $x\prime _i$ with $Pr=\frac{1}{2}+\frac{1}{2n}$.
+$A_i$ receives $f(U_{n+log n}$ and checks the second $log n$ bits of the output:\\
+If they encode the value $i$ then $A_i$ outputs these last bits.\\
+Otherwise $A_i$ outputs a random bit $b \in {0,1}$. \\
+Now 
+
+$$Pr[A_i(f(U_n,U_{logn}))=[U_n]_i]=$$
+$$=\frac{1}{2}Pr[U_{log n} \neq i]+1Pr[U_{log n}=i]=$$
+$$=\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n} > \frac{1}{2} + \frac{1}{2(n+log n)}$$
+
+We conclude that with inputs of lenth $n$, $A_i$ succeeds in the guess of $A^{th}$ with $Pr$ at least $\frac{1}{2}+\frac{1}{2n}$.
+
+Now we just need to prove that $f$ is one way:\\
+Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$ with non negligible probability.
+\todo{I think we can draw a figure of the game here (and maybe also above?)}
+
 \section{Pseudorandom Generators}
 \todo{}
 \section{Pseudorandom Functions}
