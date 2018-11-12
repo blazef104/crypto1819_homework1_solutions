@@ -3,7 +3,7 @@
 \usepackage{color}
 \usepackage{framed}
 \usepackage{amsmath}
-%\input{macro.tex}
+\input{macro.tex}
 
 \newcounter{t0d0_counter}
 \newcommand{\notodo}[1]{
@@ -185,4 +185,32 @@ Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$
 \todo{}
 \section{Message Authentication}
 \todo{}
+(b)
+
+(i)
+CBC-MAC for VLM is not secure. Consider the following construction:
+
+- Obtain a message $m_0\leftarrow\$\{0,1\}^n$ of 1 block and his Tag $\varphi_0 =F_k(m_0)$
+I can construct a message $m^\star=(m_0,m_0\xor \phi_0)$ and a valid Tag $\varphi^\star=\varphi_0$.
+In this way when the challenger will verify the message he will compute $\varphi^\star\prime=F_k(m_0\xor\varphi_0\xor\varphi_0)=F_k(m_0)=\varphi_0$. 
+And then clearly $\varphi^\star=\varphi^\star\prime$
+
+(ii)
+CBC-MAC using randomness as initialization vector. This isn't secure, consider the following construction:
+
+- Obtain 2 messages $m_0, m_1$ with $m_0\neq m_1$ and their tags $\varphi_0=(r_0,F_k(m_0\xor r_0)), \varphi_1=(r_1,F_k(m_1\xor r_1))$.
+I can now forge a new message $m^\star=(m_0\xor m_1)$ and a valid Tag $\varphi^\star=(r_1\xor m_0, \varphi_1)$.
+When the challenger will verify $\varphi^\star$ he will compute
+$\varphi^\star\prime=F_k(m_1\xor m_0\xor r_1\xor m_0)=F_k(m_1\xor r_1)=\varphi_1$
+therefore $\varphi^\star\prime=\varphi^\star$.
+
+(iii) 
+CBC-MAC that outputs the tag for each block $\varphi=\varphi_1,\varphi_2,...,\varphi_t$ is not secure. Consider the following construction:
+
+- Obtain 2 messages $m_0=(m_{0,1},m_{0,2}), m_1=(m_{1,1},m_{1,2})$, of at least 2 blocks, and their tags 
+$\varphi_0=(\varphi_{0,1},\varphi_{0,2}), \varphi_1=(\varphi_{1,1},\varphi_{1,2})$. Now i can construct 
+$m^\star=(m_{1,1}, m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1})$ and a valid Tag 
+$\varphi^\star=(\varphi_{1,1}, \varphi_{2,2})$. When the challenger will verify $\varphi^\star$ he will compute
+$\varphi^\star\prime=F_k(m_{1,1}),F_k(m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1}\xor\varphi_{1,1})=\varphi_{2,2}$
+therefore $\varphi^\star=\varphi^\star\prime$.
 \end{document}
