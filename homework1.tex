@@ -146,7 +146,37 @@ $$k \geq 574$$
 
 \section{One-Way Functions}
 (a)
-\todo{}
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=0.7]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \D^\prime $}
+      \newinst[4]{B}{$ \D $}
+      \newinst[4]{C}{$ \C $} % Increase "5" to widen
+      \postlevel
+      \mess{C}{$z$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \node[anchor=west] at (mess from) {$z=G(x)$ or $z=U_{m+1}$};
+      \postlevel
+      \mess{B}{$z$}{A}
+      \postlevel
+      \mess{A}{$x^\prime$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{B}{$b^\prime$}{C}
+      \node[anchor=west] at (mess to) {  };
+    \postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+Suppose $D^\prime$ is able to invert $G$ with non negligible probability, then $D$ can distinguish in poly time if $z$ comes from $G$ or $U_{n+1}$. 
+Upon receiving $x^\prime$ $D$ can compute $G(x^\prime)=z^\prime$, now if $z^\prime=z$ $D$ will decide $b^\prime=1$, otherwise $b^\prime=0$. The probability 
+of $D$ making the wrong guessing is related to the probability that $D^\prime$ does not correctly inverts the function. This happens with negligible probability
+\todo{Conclude on the probability (which should be correct guess-wrong guess)}
+ 
 (b) \\
 (i) By contraddiction assume that $\exists$ an adversary $A_g$ that is able to invert $g$ with non negligible probability.
 We will then have:
@@ -187,6 +217,34 @@ Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$
 \todo{}
 (b)
 
+Consider the following game form a generic CBC-MAC:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=0.7]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \A $}
+      \newinst[6]{B}{$ \C $}
+      \postlevel
+      \mess{A}{$m$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{B}{$\varphi$}{A}
+		\node[anchor=west] at (mess from) { };
+		\draw[<-] (1.2,-1.9) to[out=240,in=120] (1.2,-3.1);
+      \postlevel
+		\mess{A}{$(m^\star,\varphi^\star)$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+		\mess{B}{$b^\prime$}{A}
+		\node[anchor=west] at (mess from) { };
+		\postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
 (i)
 CBC-MAC for VLM is not secure. Consider the following construction:
 
@@ -213,4 +271,5 @@ $m^\star=(m_{1,1}, m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1})$ and a valid Tag
 $\varphi^\star=(\varphi_{1,1}, \varphi_{2,2})$. When the challenger will verify $\varphi^\star$ he will compute
 $\varphi^\star\prime=F_k(m_{1,1}),F_k(m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1}\xor\varphi_{1,1})=\varphi_{2,2}$
 therefore $\varphi^\star=\varphi^\star\prime$.
+
 \end{document}
