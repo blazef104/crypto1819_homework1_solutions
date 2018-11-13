@@ -25,6 +25,7 @@
 \begin{document}
 
 \maketitle
+\tableofcontents
 
 \section{Perfect Secrecy}
 
@@ -206,13 +207,387 @@ We conclude that with inputs of lenth $n$, $A_i$ succeeds in the guess of $A^{th
 Now we just need to prove that $f$ is one way:\\
 Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$ with non negligible probability.
 \todo{I think we can draw a figure of the game here (and maybe also above?)}
-
+\newpage
 \section{Pseudorandom Generators}
-\todo{}
+\subsection{point a}
+The two functions $G_{1}$ and $G_{2}$ have two different distributions over
+$\{0,1\}^{\lambda + l}$ , since one of the two is indistinguishable from uniform
+distribution while the other one not.\\
+Intuitively we can state that, since the XOR operation preserves the
+\textit{highest randomness} among the two operands, $z=G_{1}(.) \xor G_{2}(.)$ has
+uniform distribution.\\
+
+Hence, let's define
+\[
+    G^{*}(x, x')=G_{1}(x) \xor G_{2}(x')
+\]
+for $(x, x') $ chosen randomly over the key space.\\
+
+Now , we want to show that, given a PRG function and a non-PRG function,
+$G(x)=G_{1}(x)\xor G_{2}(x)$ is a PRG.\\
+Suppose that we have the following game, where the PRG function is $G_{1}$:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \D' $}
+      \newinst[4]{B}{$ \D $}
+      \newinst[2]{C}{$C^{prg}$}
+
+      \postlevel
+      \mess{C}{$z$}{B}
+      \node[anchor=west] at (mess from) {\shortstack[l]{
+      		$ z=G_{1}(x),$ for $ x \leftarrow\$ U_{\lambda}  $ 
+            \\
+            $  z \leftarrow\$ U_{\lambda + l}  $
+    }};
+
+      \postlevel
+      \mess{B}{$G^{*}=z\xor G_{2}(x')=z$}{A}
+      \node[anchor=west] at (mess to) {  };
+
+            \postlevel
+            \mess{A}{$b'$}{B}
+            \node[anchor=west] at (mess to) {  };
+                  \postlevel
+                  \mess{B}{$b'$}{C}
+                  \node[anchor=west] at (mess to) {  };
+            
+
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+, with $x' \leftarrow\$ \{0,1\}^{\lambda}$ and $G_{2}$ such that its output is
+always equal to $0^{n}$.
+Then $G^{*}=z \xor G_{2}(x')=z$ always.
+Now $D$ wins over $C^{prg}$ , but this is a contraddiction since PRG cannot be
+distinguished from $U_{\lambda + l}$.\\
+Furthermore, since the same reduction can be built for the case when $G_{2}$ is
+the PRG one, we can state that $G^{*}$ is always a PRG.\\
+\newpage
+\subsection{point b}
+To improve seed length we have to show that, for all possible $G_{1}$ and
+$G_{2}$ with one of them PRG and the other not and if we choose always the same
+input for both of them, $G^{*}=G_{1}(x) \xor G_{2}(x)$ is a PRG.\\
+\todo{TO REVIEW}
+======================================================================\\
+There exists a critical example:$G^{*}(x)=G_{1}(x) \xor G_{2}(x)$ and
+$G_{1}=G_{2} \xor 1^{n} $, hence $G^{*}(x)= G_{2}(x) \xor 1 \xor G_{2}(x) = 1
+\Rightarrow$ not PRG.\\
+
+ATTENZIONE: fare lo XOR preserva la distribuzione "migliore", ossia quella più
+vicina all'uniformità. Se faccio lo XOR tra 1 e la PRG, la funzione $G_{1}$ è
+una PRG a sua volta (quando invece dovrebbe essere una NON-prg).\\
+Cioè, $G_{1}$ NON-PRG è tale anche senza guardare al risultato di $G_{2}$, mentre
+così sembra che per ottenere un valore "predicibile" di $G_{1}$ devo sempre
+guardare prima a $G_{2}$.
+\\======================================================================\\
+ 
+
 \section{Pseudorandom Functions}
-\todo{}
+\subsection{point a}
+Consider an exponential time/unbounded distinguisher $D$ that,  
+\[
+\forall \F=\{ F_{k}:
+    \{0,1\}^{n(\lambda)} \to \{0,1\}^{l(\lambda)}\}_{k \in \{0,1\}^{\lambda} }
+\]
+ plays the PRF game with this family of functions :
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \D $}
+      \newinst[4]{B}{$ \C^{prf} $}
+            \postlevel
+            \mess{A}{$x$}{B}
+            \node[anchor=west] at (mess to) {  };
+           \postlevel
+           \mess{B}{$y$}{A}
+           \node[anchor=west] at (mess from) {\shortstack[l]{
+                       $  y=F_{k}(x)  $ 
+                 \\
+         $  y=R(x), \text{for }R \leftarrow\$\R(\lambda,n, l)  $ }};
+      
+      \postlevel
+      \mess{A}{$b'$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+When $\D$ receives $y$, since he is efficient in computing \textit{superpoly}
+operations, he can efficiently compute all the possible $F_{k}(x), \forall k
+\in \{0,1\}^{\lambda} $.\\
+So he can efficiently win the $Game$ for each family of PRF functions.\\
+
+\todo{Maybe here the same ideas of Note 2}
+
+\textbf{Note 1}: it can happen that $\C$ choses $y= R(x)$
+which is equal to $F_{k'}(x)$ but not to $F_{k}(x)$($k$ is the key that should
+be used in the PRF experiment), for a certain $k' \in  \{0,1\}^{\lambda} $ and
+$k'\not= k$.\\ 
+Then, $\C$ sends $y$ to $\A$, and $\A$, after finding $k'$ and  $F_{k'}(x)=y$,
+thinks that he is playing a \textit{PRF experiment}, while he is actually
+playing a \textit{random experiment}. \\
+Thus, after sending the related $b'$ to $\C$, $\A$ loses.\\
+
+How many times this \textit{collision}  can happen? In the worst case there are
+$2^{\lambda}-1$ possible common values among $F_{(.)}(x)$ and $R(x)$, the number
+of "hidden" keys minus the "legal" key chosen for the PRF experiment. So, the
+probability that $\C$, using a random function,  extracts a truly random number
+and not an $y=F_{k'}(x)$ for some $k'$ "hidden" key is
+$\frac{1}{2^{l}-(2^{\lambda}-1)}$.\\
+The more large $l$ than $\lambda$ is, the more negligible this probability is.\\
+
+
+
+\textbf{Note 2}: It can happen that $\C$ choses an $y=R(x)$ equal to $F_{k}(x)$.
+Like before, in this case $\A$ thinks he is playing with a PRF, while he is
+actually playing with a truly random function, so $\A$ loses.\\
+
+How many times this \textit{collision}  can happen ? This happens with the
+probability of picking
+an input $x$ over $|\M|$ possible inputs times the probability of picking a
+Random function $R(.)$ which contains a collision exactly for the input $x$ over
+all the possible random functions.\\
+Since the random functions with a table containing a collision with $F_{k}$
+over input $x$ are $ 2^{l 2^{n-1}} $, the probability of picking exactly $x$ and
+one of these random functions containing a collision over $x$ is 
+\[
+    \frac{1}{2^{n}} * \underbrace{\frac{2^{l 2^{n-1}}}{2^{l
+2^{n}}}}_{\frac{1}{2}}
+\]
+which is negligible.
+\subsection{point b}
+\subsubsection{i}
+
+Suppose that the proposed $F_{k}(.)$ is a PRF. This means that $F_{k}(x)$ for
+any x is indistinguishable from $R(x)$, for $R \leftarrow\$ \R(\lambda, n, l)$.\\
+Now, given a couple $(x,x')$ such that $x \not= x'$, it should be
+\textit{difficult}  to
+guess $z=R(x) \xor R(x')$, and \textit{difficult} means that, since there exists
+only one $z$ which is the output of the XOR operation, it's possible to pick the
+correct one with probability $\frac{1}{2^{l}}$.\\
+Otherwise, for a given random couple $(x, x')$, our function produces
+    \begin{gather*}
+        F_{k}(x)=x \xor G'(k) \wedge F_{k}(x')=x' \xor G'(k) \Rightarrow\\
+        \Rightarrow F_{x}(x) \xor F_{k}(x') = \\
+        x \xor G'(k) \xor x' \xor G'(k) =\\
+        =x \xor x'
+    \end{gather*}
+and it is possible to correctly guess this result with probability 1. 
+So the proposed $F_{k}(.)$ is not totally indistinguishable from a truly random
+function.
+\subsubsection{ii}
+When $F:\{0,1\}^{\lambda}*\{0,1\}^{\lambda} \to \{0,1\}^{l} $ is pseudorandom,
+it is distinguishable from the random function
+\[
+R:\{0,1\}^{\lambda} * \{0,1\}^{\lambda} \to \{0,1\}^{l} 
+\]
+just for a negligible factor.\\
+
+To prove that $F_{k}(x)=F_{x}(k)$ given is PRF, we should show that
+this property holds for every possible PRF $F$.\\
+Now consider a function $F'$ with the same definition of $F$, but when $F'$
+receives $k=t$ for a fixed $t \leftarrow\$ \{0,1\}^{\lambda} $ it always outputs
+$1^{l}$, no matter of what is given as second argument.\\
+
+Since $F'$ behaves like $F$ but for inputs starting with $t$ as prefix, it is
+indistinguishable from $R$ until one yields one of these $t-$strings.
+Since among all the strings long $\lambda + \lambda$ bits there are $\lambda$
+strings which start with the prefix $t$, 
+\[
+    \P [ \text{ Pick at random a $\lambda + \lambda$ string starting with $t$}
+    ]= \frac{1}{2^{\lambda}}  
+\]
+so $F'$ is distinguishable from $R$ for the negligible factor as for $F$ and for
+this negligible factor related to picking $t-$strings at random.
+So we can say that $F'$ is a PRF.\\
+
+But now if an attacker sends $t$ to the challenger who uses $F_{k}(x)=F_{x}(k)$,
+the attacker can guess with probability 1 if he is playing in an experiment
+involving a random function or not, since if the received message from the
+challenger is $1^{l}$ the function used is $F'$ (less than a negligible factor,
+which is the probability that the random function picks exactly $1^{l}$ for the
+given input).
+\newpage
+\subsubsection{iii}
+Let's suppose that , given the PRF $F:\{0,1\}^{n} \to \{0,1\}^{n}$, there
+exists a distinguisher $D'$ which can distinguish $F':\{0,1\}^{n-1} \to
+\{0,1\}^{2n} $ from a truly random function $R:\{0,1\}^{n-1} \to
+\{0,1\}^{2n} $.
+But if this is possible, then we have 
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \D' $}
+      \newinst[3]{B}{$ \D $}
+      \newinst[3]{C}{$\C$}
+
+            \postlevel
+            \mess{A}{$x$}{B}
+            \node[anchor=west] at (mess to) {  };
+            \postlevel
+            \mess{B}{$x\|0$}{C}
+            \node[anchor=west] at (mess to) {  };
+           \postlevel
+           \mess{C}{$y_{1}$}{B}
+           \node[anchor=west] at (mess from) {\shortstack[l]{
+                   $  y_{1}=F_{k}(x\|0)  $ 
+                 \\
+                 $ y_{1} \leftarrow\$ U_{n} $ }};
+            \postlevel
+            \mess{B}{$x\|1$}{C}
+            \node[anchor=west] at (mess to) {  };
+           \postlevel
+           \mess{C}{$y_{2}$}{B}
+           \node[anchor=west] at (mess from) {\shortstack[l]{
+                   $  y_{2}=F_{k}(x\|1)  $ if $F_{k}$ previously used
+                 \\
+                 $ y_{2} \leftarrow\$ U_{n} $ otherwise }};
+      
+      \postlevel
+      \mess{B}{$y_{1}\|y_{2}$}{A}
+      \node[anchor=west] at (mess to) {  };
+
+            \postlevel
+            \mess{A}{$b'$}{B}
+            \node[anchor=west] at (mess to) {  };
+      
+            \postlevel
+            \mess{B}{$b'$}{C}
+            \node[anchor=west] at (mess to) {  };
+
+            \sdend{}((
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+so we could break the PRF function $F_{k}$, which is impossible by definition.
+
+\newpage
 \section{Secret Key Encryption}
-\todo{}
+\subsection{point a}
+We can build a counterexample, to show that this construction is not secure:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$\A$}
+      \newinst[6]{B}{$ \C $}
+            \postlevel
+        
+            
+            \mess{A}{$\overbrace{ v_{1} \xor v_{2}, m_{2_{1}}, \ldots,
+                m_{t_{1}}}^{m_{1}^{*}}, \overbrace{v_{1}, m_{2_{1}}, \ldots,
+        m_{t_{1}}}^{m_{2}^{*}}$}{B}
+            \node[anchor=east] at (mess from) {$v_{1}, v_{2}\not=0^{n} \leftarrow\$ \M $  };
+                  \postlevel
+              \mess{B}{$\overbrace{c_{0}, c_{1}, \ldots, c_{t}}^{c^{*}}$}{A}
+                  \node[anchor=west] at (mess from) {\shortstack[l]{
+                              $b \leftarrow\$ \{1,2\} 
+                              $
+                              \\
+                  		$ c_{0} \leftarrow\$ \{0,1\}^{n} 
+                  		   $ 
+                        \\
+                $  c_{i}=P_{k}(c_{i-1} \xor m_{i_{b}})  $ }};
+                 \postlevel
+                 \mess{A}{$c_{0} \xor v_{2}, c_{1} , \ldots, c_{t-1}, c_{t} $}{B}
+                 \node[anchor=west] at (mess to) {  };
+
+                       \postlevel
+                       \mess{B}{$m_{1}, m_{2}, \ldots, m_{t}$}{A}
+                       \node[anchor=west] at (mess from) {\shortstack[l]{
+                                   $ m_{i}= P_{k}^{-1}(c_{i}) \xor
+                                   c_{i-1} $ for $i > 1$ 
+                             \\
+                     $  m_{1}=P_{k}^{-1}(c_{1}) \xor c_{0} \xor v_{2}   $ for $i=1$ }};
+                 
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+But $P_{k}^{-1}(c_{1})=c_{0} \xor m_{1_{b}}$.\\
+
+So:
+\begin{itemize}
+    \item if $b=1$, the received $m_{1}$  contains  $\not c_{0} \xor v_{1} \xor
+        \not v_{2} \xor \not c_{0} \xor \not v_{2}= v_{1} $
+    \item if $b=2$ the received $m_{1}$ contains $ \not c_{0} \xor v_{1} \xor
+        \not c_{0} \xor v_{2}= v_{1} \xor v_{2}$
+\end{itemize}
+So looking in the first block of the last query we can understand which block
+was chosen as first, and we can deduce which message was encrypted (since
+$m_{1}^{*}$ and $m_{2}^{*}$ are equal but for the first block).
+\newpage
+\subsection{point b}
+
+We have the following game as a counterexample for the CCA-security of OFB mode:
+
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \A $}
+      \newinst[6]{B}{$ \C $}
+      \postlevel
+      \mess{A}{$\overbrace{ m_{1} \xor v , m_{2} \xor v, \ldots,
+              m_{t} \xor v}^{m_{1}^{*}}, \overbrace{m_{1}, m_{2}, \ldots,
+        m_{t}}^{m_{2}^{*}} $ }{B}
+      \node[anchor=east] at (mess from) { $v \leftarrow\$ \{0,1\}^{n} 
+      $ };
+      \postlevel
+      \mess{B}{$c^{*}=r_{0}^{*}, c_{1}^{*}, \ldots, c_{t}^{*}$}{A}
+      \node[anchor=west] at (mess from) {\shortstack[l]{
+      		$b\leftarrow\$\{1, 2\} 
+      		    $ 
+            \\
+            $r_{0} \leftarrow\$ \{0,1\}^{n}, r_{i}=F_{k}(r_{i-1}) 
+             $
+         \\
+         $c_{i}= r_{i} \xor m_{i_{b}}$
+ }};
+
+      \postlevel
+      \mess{A}{$r_{0}, c_{1} \xor v, \ldots, c_{t} \xor v $}{B}
+      \node[anchor=east] at (mess from) {  };
+      \postlevel
+      \mess{B}{$m_{1}, \ldots, m_{t}$}{A}
+      \node[anchor=west] at (mess from) {\shortstack[l]{
+      		$  m_{i}=r_{i} \xor c_{i} \xor v  $ 
+            \\
+            $    $ }};
+
+
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+Now there are 2 possibilities:
+\begin{itemize}
+    \item if $b=1$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i} \xor
+        v}^{c_{i}} \xor v=m_{i}$
+    \item if $b=0$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i}}^{c_{i}}
+        \xor v = m_{i} \xor v$
+\end{itemize}
+and this allows the Attacker to understand which message was took for
+encryption.
 \section{Message Authentication}
 \todo{}
 (b)
