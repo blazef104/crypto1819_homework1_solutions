@@ -179,19 +179,19 @@ of $D$ making the wrong guessing is related to the probability that $D^\prime$ d
 \todo{Conclude on the probability (which should be correct guess-wrong guess)}
  
 (b) \\
-(i) By contraddiction assume that $\exists$ an adversary $A_g$ that is able to invert $g$ with non negligible probability.
+(i) By contraddiction assume that $\exists$ a distinguisher $D^\prime_g$ that is able to invert $g$ with non negligible probability (as before).
 We will then have:
-$$ Pr[g(x \prime || j)=y : x \leftarrow\$ \{0,1\}^n, y\prime = g(x), |j|=log n, x\prime \leftarrow\$A_g(1^{\lambda)},y)] \geq \frac{1}{p(\lambda)}$$
-We can also define another adversary $A_f$ which is able to invert $f$ with non negligible probability such that:
-$$ A_f(y)=(A_g(y,j,x_j))$$
-Note that $A_g$ reveals $g$ when taking $(y,j,x_j)$ as input and in the same way, $A_f$ reveals $f$ on input $y$.
-Thereofre $A_f$ leaks f (on input $y$) with the same probability of $A_g$ which is non negligible. $\implies$ Contraddiction.
+$$ Pr[g(x^\prime || j)=z : x \leftarrow\$ \{0,1\}^n, z^\prime = g(x), |j|=log(n), x^\prime \leftarrow\$D^\prime_g(1^{\lambda},z)] \geq \frac{1}{p(\lambda)}$$
+We can also define another adversary $D^\prime_f$ which is able to invert $f$ with non negligible probability such that:
+$$ D^\prime_f(z)=(D^\prime_g(z,j,x_j))$$
+Note that $D^\prime_g$ reveals $g$ when taking $(z,j,x_j)$ as input and in the same way, $D^\prime_f$ reveals $f$ on input $z$.
+Thereofre $D^\prime_f$ leaks f (on input $z$) with the same probability of $D^\prime_g$ which is non negligible. $\implies$ Contraddiction.
 
-\todo{Review the part (ii) it is a bit over complicated}
-(ii) Let $g$ be a OWF then define $f$ as follows:
-$$ f(U_{n+logn})=f(U_n,U_{log n})=g(U_n),U_{log n},[U_n]_{U_{log n}}$$
-where $[x\prime]_i$ denote the $i^{th}$ bit of $x\prime$.
-In words, f receives an input on length $n+log n$ and outputs $g$ applied to the first $n$ bits, together with $i$ and the $i^{th}$ bit if the input ( $i$ is the value in the last $log n$ bits of the input).\\
+\vspace*{\baselineskip}
+\noindent(ii) Let $g$ be a OWF then we can define $f$ as follows:
+$$ f(U_{n+log(n)})=f(U_n,U_{log(n)})=g(U_n),U_{log(n)},[U_n]_{U_{log(n)}}$$
+where $[x\prime]_i$ denote the $i^{th}$ bit of $x\prime$.\\
+In words, $f$ receives an input of length $n+log(n)$ and outputs $g$ applied to the first $n$ bits, together with $i$ and the $i^{th}$ bit if the input ( $i$ is the value in the last $log(n)$ bits of the input).\\
 Fix $i$, we construct an $A_i$ s.t. $A_i(f(x\prime))$ outputs $x\prime _i$ with $Pr=\frac{1}{2}+\frac{1}{2n}$.
 $A_i$ receives $f(U_{n+log n}$ and checks the second $log n$ bits of the output:\\
 If they encode the value $i$ then $A_i$ outputs these last bits.\\
@@ -202,12 +202,12 @@ $$Pr[A_i(f(U_n,U_{logn}))=[U_n]_i]=$$
 $$=\frac{1}{2}Pr[U_{log n} \neq i]+1Pr[U_{log n}=i]=$$
 $$=\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n} > \frac{1}{2} + \frac{1}{2(n+log n)}$$
 
-We conclude that with inputs of lenth $n$, $A_i$ succeeds in the guess of $A^{th}$ with $Pr$ at least $\frac{1}{2}+\frac{1}{2n}$.
+We conclude that with inputs of length $n$, $A_i$ succeeds in the guess of $A^{th}$ with $Pr$ at least $\frac{1}{2}+\frac{1}{2n}$.
 
-Now we just need to prove that $f$ is one way:\\
-Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$ with non negligible probability.
-\todo{I think we can draw a figure of the game here (and maybe also above?)}
-\newpage
+\todo{Now we just need to prove that $f$ is one way:\\
+Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$ with non negligible probability.\
+I think we can draw a figure of the game here (and maybe also above?)}
+
 \section{Pseudorandom Generators}
 \subsection{point a}
 The two functions $G_{1}$ and $G_{2}$ have two different distributions over
