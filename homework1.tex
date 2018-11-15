@@ -18,7 +18,7 @@
 
 
 \title{\textbf{Cryptography Homework 1}\\ {\normalsize (Solutions)}}
-\author{Giulio Ginesi}
+\author{Giulio Ginesi - 1480066}
 \date{}
 
 
@@ -28,41 +28,54 @@
 \tableofcontents
 
 \section{Perfect Secrecy}
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[every text node part/.style={align=center}, scale=0.7]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \A $}
+      \newinst[4]{B}{$ \C $}
+      \postlevel
+      \mess{A}{$(m_0,m_1)$}{B}
+      \postlevel
+      \mess{B}{$c$}{A}
+      \node[anchor=west] at (mess from) { $k\leftarrow\$ K, b\leftarrow\$\{0,1\}$\\ $c=Enc(k,m_b)$ };
+      \postlevel
+      \mess{A}{$b'$}{B}
+      \node[anchor=west] at (mess to) { output 1 IFF $b'=b$ };
+      \postlevel
+    \postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
 
-\todo{Image of the game, review the demonstration we have done}
 
-We want to prove that (a) $Pr[Game_{\pi,A}^{eav}=1]=\frac{1}2$ is perfectly secret. 
-Let's use the last one of the 3 properties we saw in class: 
-
-(b) $Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $.
+From our hypotesis we have that (a): $Pr[Game_{\pi,A}^{eav}=1]=\frac{1}2$ and we want to use the following notion of prefect secrecy (b): $Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $. 
 
 We want to prove that $a \implies b$ and also $ b \implies a $
-\bigskip
-$a \implies b$
+\\
+For the first part $a \implies b$:
 
-$\forall m_0,m_1 \in M, \forall c \in C $ we can rewrite the second equation using Game: 
+The notion (a) can be rewritten as 
 
-$$ Pr[Game=1 | b=0]Pr[b=0]=Pr[Game=1 | b=1]Pr[b=1] $$
-
-Since Game and b are independent we can use Bayes as follows:
-
-$$\Rightarrow \frac{Pr[Game_{\pi, A}^{eav}=1]Pr[b=0]}{Pr[b=0]}Pr[b=0]=\frac{Pr[Game_{\pi, A}^{eav}=1]Pr[b=1]}{Pr[b=1]}Pr[b=1]$$
-$$\Rightarrow Pr[Game_{\pi, A}^{eav}=1]Pr[b=0]=Pr[Game_{\pi, A}^{eav}=1]Pr[b=1]$$
+$$ Pr[Game=1 | b=0]Pr[b=0]+Pr[Game=1 | b=1]Pr[b=1]=$$
+Since $b$ is chosen uniformly between 0 and 1 we have:
+$$=\frac{1}{2}Pr[Game=1 | b=0]+\frac{1}{2}Pr[Game=1 | b=1]=$$
+$$=\frac{1}{2}(Pr[Game=1 | b=0]+Pr[Game=1 | b=1])$$
 
 
 
 \section{Universal Hashing}
- \todo{Maybe we should try and go through all what we have done so far}
- (a)
-
- (i)  
+ \subsection{point a}
+ \subsubsection{(i)}
  We can prove that $t-wise \implies (t-1)-wise$ just by writing down the notion of $t$-wise independence.
 
  $$ \sum_{i=0}^t{Pr[h_s(x_i)=y_i]} = \sum_{i=0}^{t-1}{(Pr[h_s(x_i)=y_i])}+Pr[h_s(x_t)=y_t]$$
 
  From the above equation we can see that the $t-1$-wise independence is contained in the $t$ wise one. 
 
- (ii) $$ Pr[h_s(x_0)=y \wedge h_s(x_1)=y \wedge h_s(x_2)=y] = \frac{1}{|y^3|} $$
+ \subsubsection{(ii)} $$ Pr[h_s(x_0)=y \wedge h_s(x_1)=y \wedge h_s(x_2)=y] = \frac{1}{|y^3|} $$
       
 Now for 3 different x: $x_0 \neq x_1 \neq x_2$ the corresponding hash functions are as follows:
 
@@ -121,16 +134,17 @@ $$=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[S_0+S_1x_0+S_2x_0^2=\varphi \wedge S_0+S_1x_1+S
 
 $$= \frac{1}{|Z_q^3|}=\frac{1}{q^3}$$
 
-(b)
+\subsection{part b}
+\subsubsection{(i)}
 
-(i) $ l = 128 $ what is the minimal min-entropy to achieve $\varepsilon = 2^{-80}$?
+$l = 128 $ what is the minimal min-entropy to achieve $\varepsilon = 2^{-80}$?
 
 $$128 \leq k-(2log2^{80} -2)$$
 $$k \geq 286$$
 
 Entropy loss: $\delta = 158$
 
-(ii)
+\subsubsection{(ii)}
 
 If $ k = 238 $ what is the maximum amount of uniform randomness with $\varepsilon = 2^{-80}$?
 
@@ -139,14 +153,21 @@ $$l \leq 80$$
 
 Making computational assumptions explain how to obtain $ l = 320 $
 
-Let's assume a larg enough $\varepsilon = 2^{-128}$ then our $k$ will be:
-$$320 \leq k - (2log2^{128}-2)$$
+Let's assume a large enough $\varepsilon = 2^{-128}$ then our $k$ will be:
+$$320 \leq k - (2log2^{128}-2)$$    
 $$k \geq 574$$ 
 
-\todo{Review computational assumptions}
+How can we obtain $l=320$ using computational assumptions?
+$$320\leq k-(2log(\frac{1}{\varepsilon})-2)$$
+I assume a large enough $\varepsilon=2^(128)$ 
+$$320\leq k-(2*128-2)$$
+$$320\leq k-254$$
+$$k\geq574$$
 
+\newpage
 \section{One-Way Functions}
-(a)
+\subsection{part a}
+
 \begin{figure}[h!]
    \centering
    \sdinit{}
@@ -174,33 +195,38 @@ $$k \geq 574$$
 \end{figure}
 
 Suppose $D^\prime$ is able to invert $G$ with non negligible probability, then $D$ can distinguish in poly time if $z$ comes from $G$ or $U_{n+1}$. 
-Upon receiving $x^\prime$ $D$ can compute $G(x^\prime)=z^\prime$, now if $z^\prime=z$ $D$ will decide $b^\prime=1$, otherwise $b^\prime=0$. The probability 
-of $D$ making the wrong guessing is related to the probability that $D^\prime$ does not correctly inverts the function. This happens with negligible probability
-\todo{Conclude on the probability (which should be correct guess-wrong guess)}
+Upon receiving $x^\prime$ $D$ can compute $G(x^\prime)=z^\prime$.
+
+Now if $z^\prime=z$, $D$ will decide $b^\prime=1$ otherwise $b^\prime=0$.
+\todo{THIS IS COMPLETELY WRONG!}
  
-(b) \\
-(i) By contraddiction assume that $\exists$ a distinguisher $D^\prime_g$ that is able to invert $g$ with non negligible probability (as before).
+\subsection{part b}
+\subsubsection{(i)}
+
+By contraddiction assume that $\exists$ a distinguisher $D^\prime_g$ that is able to invert $g$ with non negligible probability (as before).
 We will then have:
 $$ Pr[g(x^\prime || j)=z : x \leftarrow\$ \{0,1\}^n, z^\prime = g(x), |j|=log(n), x^\prime \leftarrow\$D^\prime_g(1^{\lambda},z)] \geq \frac{1}{p(\lambda)}$$
+
 We can also define another adversary $D^\prime_f$ which is able to invert $f$ with non negligible probability such that:
 $$ D^\prime_f(z)=(D^\prime_g(z,j,x_j))$$
 Note that $D^\prime_g$ reveals $g$ when taking $(z,j,x_j)$ as input and in the same way, $D^\prime_f$ reveals $f$ on input $z$.
-Thereofre $D^\prime_f$ leaks f (on input $z$) with the same probability of $D^\prime_g$ which is non negligible. $\implies$ Contraddiction.
+Therefore $D^\prime_f$ leaks f (on input $z$) with the same probability of $D^\prime_g$ which is non negligible. $\implies$ Contraddiction.
 
-\vspace*{\baselineskip}
-\noindent(ii) Let $g$ be a OWF then we can define $f$ as follows:
+\subsubsection{(ii)}
+
+Let $g$ be a OWF then we can define $f$ as follows:
 $$ f(U_{n+log(n)})=f(U_n,U_{log(n)})=g(U_n),U_{log(n)},[U_n]_{U_{log(n)}}$$
 where $[x\prime]_i$ denote the $i^{th}$ bit of $x\prime$.\\
 In words, $f$ receives an input of length $n+log(n)$ and outputs $g$ applied to the first $n$ bits, together with $i$ and the $i^{th}$ bit if the input ( $i$ is the value in the last $log(n)$ bits of the input).\\
 Fix $i$, we construct an $A_i$ s.t. $A_i(f(x\prime))$ outputs $x\prime _i$ with $Pr=\frac{1}{2}+\frac{1}{2n}$.
-$A_i$ receives $f(U_{n+log n}$ and checks the second $log n$ bits of the output:\\
+$A_i$ receives $f(U_{n+log(n)})$ and checks the second $log n$ bits of the output:\\
 If they encode the value $i$ then $A_i$ outputs these last bits.\\
 Otherwise $A_i$ outputs a random bit $b \in {0,1}$. \\
 Now 
 
-$$Pr[A_i(f(U_n,U_{logn}))=[U_n]_i]=$$
-$$=\frac{1}{2}Pr[U_{log n} \neq i]+1Pr[U_{log n}=i]=$$
-$$=\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n} > \frac{1}{2} + \frac{1}{2(n+log n)}$$
+$$Pr[A_i(f(U_n,U_{log(n)}))=[U_n]_i]=$$
+$$=\frac{1}{2}Pr[U_{log(n)} \neq i]+1Pr[U_{log(n)}=i]=$$
+$$=\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n} > \frac{1}{2} + \frac{1}{2(n+log(n))}$$
 
 We conclude that with inputs of length $n$, $A_i$ succeeds in the guess of $A^{th}$ with $Pr$ at least $\frac{1}{2}+\frac{1}{2n}$.
 
@@ -210,22 +236,18 @@ I think we can draw a figure of the game here (and maybe also above?)}
 
 \section{Pseudorandom Generators}
 \subsection{point a}
+
 The two functions $G_{1}$ and $G_{2}$ have two different distributions over
-$\{0,1\}^{\lambda + l}$ , since one of the two is indistinguishable from uniform
-distribution while the other one not.\\
-Intuitively we can state that, since the XOR operation preserves the
-\textit{highest randomness} among the two operands, $z=G_{1}(.) \xor G_{2}(.)$ has
-uniform distribution.\\
+$\{0,1\}^{\lambda + l}$, since one of the two is indistinguishable from uniform
+distribution while the other one is not.
 
-Hence, let's define
-\[
-    G^{*}(x, x')=G_{1}(x) \xor G_{2}(x')
-\]
-for $(x, x') $ chosen randomly over the key space.\\
+Intuitively we can state that the XOR operation preserves the distribution, and therefore the randomness (as we have done when demonstrating OTP). For this reason $G_{1}(.) \xor G_{2}(.)$ has uniform distribution if one of the two is uniformly distributed.
 
-Now , we want to show that, given a PRG function and a non-PRG function,
-$G(x)=G_{1}(x)\xor G_{2}(x)$ is a PRG.\\
-Suppose that we have the following game, where the PRG function is $G_{1}$:
+For our problem let's create our new function $G^*$ as: 
+$$G^{*}(S_1, S_2)=G_{1}(S_1) \xor G_{2}(S_2)$$
+where the seeds $(S_1, S_2) $ are sampled at random over $\lambda$ and $S_1 \neq S_2$.\\
+
+Let's fix $G_{1}$ as our PRG without loss of generality, suppose we can build a PPT distinguisher which is able to tell apart $G_1$ and $U_{\lambda+l}$:
 
 \begin{figure}[h!]
    \centering
@@ -235,19 +257,17 @@ Suppose that we have the following game, where the PRG function is $G_{1}$:
       \newinst{A}{$ \D' $}
       \newinst[4]{B}{$ \D $}
       \newinst[2]{C}{$C^{prg}$}
-
       \postlevel
       \mess{C}{$z$}{B}
       \node[anchor=west] at (mess from) {\shortstack[l]{
-      		$ z=G_{1}(x),$ for $ x \leftarrow\$ U_{\lambda}  $ 
-            \\
-            $  z \leftarrow\$ U_{\lambda + l}  $
+            $ z=G_{1}(S_0),$ for $ S_0 \leftarrow\$ U_{\lambda}$ 
+            \\or\\
+            $ z \leftarrow\$ U_{\lambda + l} $
     }};
 
       \postlevel
-      \mess{B}{$G^{*}=z\xor G_{2}(x')=z$}{A}
-      \node[anchor=west] at (mess to) {  };
-
+      \mess{B}{$G^{*}=z\xor G_{2}(S_1)$}{A}
+      \node[anchor=west] at (mess from) { $S_1\leftarrow\$ U_{\lambda}$ };
             \postlevel
             \mess{A}{$b'$}{B}
             \node[anchor=west] at (mess to) {  };
@@ -262,32 +282,19 @@ Suppose that we have the following game, where the PRG function is $G_{1}$:
    \end{tikzpicture}
 \end{figure}
 
-, with $x' \leftarrow\$ \{0,1\}^{\lambda}$ and $G_{2}$ such that its output is
-always equal to $0^{n}$.
-Then $G^{*}=z \xor G_{2}(x')=z$ always.
-Now $D$ wins over $C^{prg}$ , but this is a contraddiction since PRG cannot be
-distinguished from $U_{\lambda + l}$.\\
-Furthermore, since the same reduction can be built for the case when $G_{2}$ is
-the PRG one, we can state that $G^{*}$ is always a PRG.\\
-\newpage
-\subsection{point b}
-To improve seed length we have to show that, for all possible $G_{1}$ and
-$G_{2}$ with one of them PRG and the other not and if we choose always the same
-input for both of them, $G^{*}=G_{1}(x) \xor G_{2}(x)$ is a PRG.\\
-\todo{TO REVIEW}
-======================================================================\\
-There exists a critical example:$G^{*}(x)=G_{1}(x) \xor G_{2}(x)$ and
-$G_{1}=G_{2} \xor 1^{n} $, hence $G^{*}(x)= G_{2}(x) \xor 1 \xor G_{2}(x) = 1
-\Rightarrow$ not PRG.\\
+Now to distinguish between $G^*$ and $U_{\lambda+l}$ means to distinguish between $G_1$ and $U_{\lambda+l}$ (for the xor property discussed before). Hence this is a contraddiction since $G_1$ is a PRG by definition. \\ 
+The exact same proof can be repeated if $G_{2}$ is a PRG.
 
-ATTENZIONE: fare lo XOR preserva la distribuzione "migliore", ossia quella più
-vicina all'uniformità. Se faccio lo XOR tra 1 e la PRG, la funzione $G_{1}$ è
-una PRG a sua volta (quando invece dovrebbe essere una NON-prg).\\
-Cioè, $G_{1}$ NON-PRG è tale anche senza guardare al risultato di $G_{2}$, mentre
-così sembra che per ottenere un valore "predicibile" di $G_{1}$ devo sempre
-guardare prima a $G_{2}$.
-\\======================================================================\\
- 
+\subsection{point b}
+
+We would like to optimize the seed length (i.e. use the same seed for both functions). On this point I have two considerations:
+
+1) The same seed can't be used since, looking at the above game, it would mean that $D$ must have access to the seed $S$ used by $C$. This is a big problem because with access to this information $D$ can compute both $G_1(S)$ and $G_2(S)$ (the PRGs are public) and therefore will win the Game with probability=1 always.\\
+
+2) There exists an example using a specific construction of $G_{1}=G_{2} \xor 1^{\lambda} $ where $G_1$ is a PRG and therefore also $G_2$ is a PRG.
+Hence $G^{*}(S)= G_{2}(S) \xor 1 \xor G_{2}(S) = 1$ which is not a PRG.\\
+
+\todo{Intuition: fixed $G_1$ as the PRG: $G^*=G_1(S_0)\xor G_2(S_0)\xor G_2(S_1)$ this a PRG even when using always the same seed ($G^*=G_1(S)$) however the problem discussed in 1) remains.}
 
 \section{Pseudorandom Functions}
 \subsection{point a}
