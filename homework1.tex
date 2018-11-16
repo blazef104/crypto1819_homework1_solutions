@@ -694,7 +694,6 @@ There are few important considerations to make:
         already sent to $\C$ the attacker has to guess the $\phi$ which will be
         outputted by the final run of the $Tag_{k}(.)$ function.
 \end{itemize}
-\todo{Complete oracle to ufcmva interaction}
 \subsubsection{ ii }
 To show that:
 \[
@@ -713,9 +712,18 @@ To show that:
       \newinst[2.5]{C}{$ \A $}
       \newinst[2]{D}{$\C^{ufcma}$}
 
+            \postlevel
+            \mess{B}{$(m^{*}, \phi')$}{A}
+            \node[anchor=west] at (mess from) {$ m^{*} \wedge \phi'$
+                random };
+                  \postlevel
+                  \mess{A}{$b \leftarrow \{0,1\}$}{B}
+                  \node[anchor=west] at (mess to) {  };
+    \draw [->] (1.2,-3.3) to[out=240,in=110] (1.2,-1.7);
+      
       \postlevel
       \mess{B}{$(m^{*}, \phi^{*})$}{C}
-      \node[anchor=west] at (mess to) {  };
+      \node[anchor=east] at (mess from) {$O ((m^{*},\phi^{*}))=1$  };
       \postlevel
       \mess{C}{$(m^{*}, \phi^{*})$}{D}
       \node[anchor=west] at (mess to) {  };
@@ -726,43 +734,48 @@ To show that:
 and then $\A$ wins, but this is a contraddiction.\\
 
 \textbf{Note:} the last message $\A$ sends to $\C^{ufcma}$ should be fresh
-(never asked to $\C^{ufcma}$), because of the standard definition of $Game^{ufcma}$. The only way that $A$ can win, since $m^*$ must be fresh, is just if $A^{ufcmva}$ makes queries to the $O$ fixing $m^*$ and forging multiple Tags until he finds the right $\varphi^*$ for which  $b=1$.
-
+(never asked to $\C^{ufcma}$), because of the standard definition of
+$Game^{ufcma}$. The only way that $A$ can win, since $m^*$ must be fresh, is
+just if $A^{ufcmva}$ makes queries to the $O$ fixing $m^*$ and forging multiple
+Tags until he finds the right $\phi^*$ for which  $b=1$.  \newpage
 \subsubsection{ iii }
-Let's contruct our $\Pi'$ as:
+Given $\Pi=(Tag, Vrfy)$ , let's contruct our $\Pi'=(Tag', Vrfy')$ as:
 \begin{itemize}
-   \item Tag'(x)=Tag(x)||0
-   \item Vrf'(k,m,$\varphi$) executes:
+   \item $Tag'(x)=Tag(x)\|0$
+   \item $Vrfy'(k,m,\phi')$ executes:
    \begin{enumerate}
-      \item Splits $\varphi$ into 2 parts: $\varphi', i$.
-      \item Uses the first part as input for Vrf(k,m,$\varphi'$) and stores the output into d.
-      \item Now if d=1 check if $i \geq 1$ and if so outputs $k[i]$, the i-th bit of the key.
+      \item Split $\phi'$ into 2 parts: $\phi \| i$.
+      \item Use the first part as input for $Vrfy(k,m,\phi)$ and store the
+          output into d.
+      \item Now if d=1 check if $i \geq 1$ and if so output $k[i]$, the i-th
+  bit of the key; otherwise, simply return $d$.
    \end{enumerate}
 \end{itemize}
 
-Since Tag'(.) does not change the original Tag function, this is till uf-cma secure.\\
+Since $Tag'(.)$ does not change the original $Tag()$ function, this is till uf-cma secure.\\
 But now, for the following counterexample we can show that $\Pi'$ is not uf-cmva secure.
 
 \begin{figure}[h!]
    \centering
    \sdinit{}
-   \begin{tikzpicture}
+   \begin{tikzpicture}[scale=0.8]
       \sdbegin{}
       \newinst{A}{O}
-      \newinst[2.5]{B}{$ \A $}
-      \newinst[2]{C}{$\C^{ufcmva}$}
+      \newinst[4]{B}{$ \A $}
+      \newinst[4]{C}{$\C^{ufcmva}$}
       \postlevel
       \mess{B}{$m$}{C}
       \node[anchor=west] at (mess to) {  };
       \postlevel
-      \mess{C}{$\varphi$}{B}
+      \mess{C}{$\phi$}{B}
       \node[anchor=west] at (mess to) {  };
       \postlevel
-      \mess{B}{$(m,\varphi||i)$}{A}
+      \mess{B}{$(m,\phi||i)$}{A}
       \node[anchor=west] at (mess to) {  };
       \postlevel
       \mess{A}{$k[i]$}{B}
       \node[anchor=west] at (mess to) {  };
+      \draw [->] (1.2,-5.7) to[out=240,in=110] (1.2,-4);
       \postlevel
       \mess{B}{$(m^{*}, \phi^{*})$}{C}
       \node[anchor=west] at (mess to) {  };
@@ -771,7 +784,16 @@ But now, for the following counterexample we can show that $\Pi'$ is not uf-cmva
       \sdend{}
    \end{tikzpicture}
 \end{figure}
-To leak the key completely $A$ sends 
+
+Given the $Vrfy'$ algorithm, now $\A$ obtains a valid tag $\phi$ for $m$ and
+makes $|k|$ (length of the key $k$) queries to the oracle, to leak at every 
+query a specific bit of the key.\\
+In particular, every new query to the oracle contains an incremental value of
+$i$ until $|k|$, so the key is completely discovered after $|k|$ queries.\\
+
+In the end, $\A$ simply choses a fresh random message $m^{*}$, uses the key for
+computing $Tag_{k}(m^{*})=\phi^{*}$ and sends this couple to the challenger,
+being sure of winning.
 
 \subsection{b}
 
