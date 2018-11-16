@@ -615,9 +615,129 @@ Now there are 2 possibilities:
 \end{itemize}
 and this allows the Attacker to understand which message was took for
 encryption.
+\newpage
 \section{Message Authentication}
-\todo{}
-(b)
+\subsection{ point a}
+\subsubsection{ i }
+It's possible to define a \textbf{UFCMVA} property for a MAC scheme $\Pi=( Tag,
+Vrfy)$ as the following one:
+
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=1]
+      \sdbegin{}
+      \newinst{A}{$ O $}
+      \newinst[4]{B}{$ \A $}
+      \newinst[4]{C}{$\C^{ufcmva}_{k \leftarrow\$ \K}$}
+
+            \postlevel
+            \mess{B}{$m_{i}$}{C}
+            \node[anchor=west] at (mess from) {\shortstack[l]{
+            		$    $ 
+                  \\
+                  $    $ }};
+
+                    \postlevel
+                    \mess{C}{$\phi_{i}$}{B}
+                    \node[anchor=west] at (mess from) {\shortstack[l]{
+                                $ \phi_{j} \leftarrow\$ Tag_{k}(m_{j})   $ 
+                           }};
+\draw [->] (6.8,-3.3) to[out=240,in=110] (6.8,-1.7);
+              
+            \postlevel
+            \mess{B}{$(m_{j},\phi_{j})$}{A}
+            \node[anchor=west] at (mess from) {\shortstack[l]{
+            		$    $ 
+                  \\
+                  $    $ }};
+      \postlevel
+      \mess{A}{$b \leftarrow \{0,1\}$}{B}
+      \node[anchor=west] at (mess to) {\shortstack[l]{
+              1 IFF $ \phi_{j} \leftarrow\$ Tag_{k}(m_{j})    $ 
+            \\
+            0 otherwise }};
+
+        \draw [->] (1.2,-5.7) to[out=240,in=110] (1.2,-4);
+\postlevel
+\postlevel
+              \postlevel
+              \mess{B}{$(m^{*}, \phi^{*})$}{C}
+              \node[anchor=west] at (mess to) {1 IFF $ \phi^{*} \leftarrow\$
+                  Tag_{k}(m^{*}) $};
+              
+      
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+So, if a MAC scheme is UFCMVA, the following formula must be valid for an
+attacker:
+\[
+    \P [ Game^{ufcmva}=1 ] \leq negl(\lambda)  
+\]
+There are few important considerations to make:
+\begin{itemize}
+    \item $Tag_{k}(.)$ is supposed to be a randomized function, so it returns
+        not a single value, but a set of possible values
+    \item requests to oracle and to challenger from $\A$ can happen in any
+        possible order ( not necessarily as shown in the image)
+    \item the last message is the challenge couple $(m^{*}, \phi^{*})$, which
+            wins only if the re-computed tag is exactly the same as $\phi^{*}$
+    \todo{
+    \item the couple $(m_{j}, \phi_{j})$ for which $b$ is equal to 1, if
+            used as challenge couple, \textbf{wins} the game for sure: in other
+            words, the oracle \textit{predicts the result of a potential
+            execution of Tag function with that couple}
+        }
+    \item the oracle tells $b=1$ if $\phi_{j}$ is in the set of possible values
+        computed by $Tag_{k}(m_{j})$
+    \item since, when the challenge happens, the verification of $\phi^{*}$ is
+        done recomputing $\phi \leftarrow\$ Tag_{k}(m^{*})$, 
+        \textbf{it doesn't really matter if $m^{*}$ is fresh or not} , since even if
+        already sent to $\C$ the attacker has to guess the $\phi$ which will be
+        outputted by the final run of the $Tag_{k}(.)$ function.
+\end{itemize}
+\todo{Missing things}
+\subsubsection{ ii }
+To show that:
+\[
+   Tag \text{ has unique MACs} \wedge UFCMA \Rightarrow UFCMVA
+\]
+ let's prove it by reduction, supposing that an $\A^{ufcmva}$ adversary who can
+ break $Game^{ufcmva}$ exists:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{O}
+      \newinst[2.5]{B}{$ \A^{ufcmva} $}
+      \newinst[2.5]{C}{$ \A $}
+      \newinst[2]{D}{$\C^{ufcma}$}
+
+      \postlevel
+      \mess{B}{$(m^{*}, \phi^{*})$}{C}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{C}{$(m^{*}, \phi^{*})$}{D}
+      \node[anchor=west] at (mess to) {  };
+
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+and then $\A$ wins, but this is a contraddiction.\\
+
+\textbf{Note:} the last message $\A$ sends to $\C^{ufcma}$ should be fresh
+(never asked to $\C^{ufcma}$), because of the standard definition of $Game^{ufcma}$.
+
+\subsubsection{ iii }
+
 
 Consider the following game form a generic CBC-MAC:
 
