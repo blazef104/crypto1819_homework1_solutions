@@ -686,12 +686,6 @@ There are few important considerations to make:
         possible order ( not necessarily as shown in the image)
     \item the last message is the challenge couple $(m^{*}, \phi^{*})$, which
             wins only if the re-computed tag is exactly the same as $\phi^{*}$
-    \todo{
-    \item the couple $(m_{j}, \phi_{j})$ for which $b$ is equal to 1, if
-            used as challenge couple, \textbf{wins} the game for sure: in other
-            words, the oracle \textit{predicts the result of a potential
-            execution of Tag function with that couple}
-        }
     \item the oracle tells $b=1$ if $\phi_{j}$ is in the set of possible values
         computed by $Tag_{k}(m_{j})$
     \item since, when the challenge happens, the verification of $\phi^{*}$ is
@@ -725,8 +719,6 @@ To show that:
       \postlevel
       \mess{C}{$(m^{*}, \phi^{*})$}{D}
       \node[anchor=west] at (mess to) {  };
-
-
       \sdend{}
       \sdend{}
    \end{tikzpicture}
@@ -734,10 +726,12 @@ To show that:
 and then $\A$ wins, but this is a contraddiction.\\
 
 \textbf{Note:} the last message $\A$ sends to $\C^{ufcma}$ should be fresh
-(never asked to $\C^{ufcma}$), because of the standard definition of $Game^{ufcma}$.
+(never asked to $\C^{ufcma}$), because of the standard definition of $Game^{ufcma}$. The only way that $A$ can win, since $m^*$ must be fresh, is just if $A^{ufcmva}$ makes queries to the $O$ fixing $m^*$ and forging multiple Tags until he finds the right $\varphi^*$ for which  $b=1$.
 
 \subsubsection{ iii }
 
+
+\subsection{b}
 
 Consider the following game form a generic CBC-MAC:
 
@@ -767,7 +761,7 @@ Consider the following game form a generic CBC-MAC:
    \end{tikzpicture}
 \end{figure}
 
-(i)
+\subsubsection{(i)}
 CBC-MAC for VLM is not secure. Consider the following construction:
 
 - Obtain a message $m_0\leftarrow\$\{0,1\}^n$ of 1 block and his Tag $\varphi_0 =F_k(m_0)$
