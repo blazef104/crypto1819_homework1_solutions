@@ -159,7 +159,7 @@ $$k \geq 574$$
 
 How can we obtain $l=320$ using computational assumptions?
 $$320\leq k-(2log(\frac{1}{\varepsilon})-2)$$
-I assume a large enough $\varepsilon=2^(128)$ 
+I assume a large enough $\varepsilon=2^{-128}$ 
 $$320\leq k-(2*128-2)$$
 $$320\leq k-254$$
 $$k\geq574$$
@@ -174,9 +174,9 @@ $$k\geq574$$
    \begin{tikzpicture}[scale=0.7]
       % Define symbols and names for the parties
       \sdbegin{}
-      \newinst{A}{$ \D^\prime $}
+      \newinst{A}{$ \D^{\prime(prg)} $}
       \newinst[4]{B}{$ \D $}
-      \newinst[4]{C}{$ \C $} % Increase "5" to widen
+      \newinst[4]{C}{$ \C^{prg} $} % Increase "5" to widen
       \postlevel
       \mess{C}{$z$}{B}
       \node[anchor=west] at (mess to) {  };
@@ -185,7 +185,7 @@ $$k\geq574$$
       \mess{B}{$z$}{A}
       \postlevel
       \mess{A}{$x^\prime$}{B}
-      \node[anchor=west] at (mess to) {  };
+      \node[anchor=west] at (mess to) { $G(x')=z'$ };
       \postlevel
       \mess{B}{$b^\prime$}{C}
       \node[anchor=west] at (mess to) {  };
@@ -196,43 +196,64 @@ $$k\geq574$$
 
 Suppose $D^\prime$ is able to invert $G$ with non negligible probability, then $D$ can distinguish in poly time if $z$ comes from $G$ or $U_{n+1}$. 
 Upon receiving $x^\prime$ $D$ can compute $G(x^\prime)=z^\prime$.
+Now if $z^\prime=z$, $D$ will decide $b^\prime=1$ otherwise $b^\prime=0$.\\
 
-Now if $z^\prime=z$, $D$ will decide $b^\prime=1$ otherwise $b^\prime=0$.
-\todo{THIS IS COMPLETELY WRONG!}
- 
+There is one case in which $D$ makes the wrong guess. Suppose that $C$ choses $z$ from uniform and this z is exactly the output of $G(.)$ with a particular $x'$ which is exactly the value given by $D'$ when it receives \\$z\leftarrow\$U_{m+1}$. This is the probability of choosing a "colliding z" times the probability of $D'$ giving as $x'$ exactly the right value for which $G(x')=z$ but $z\leftarrow\$U_{m+1}$. This happens with $Pr=\frac{1}{|z|}\frac{1}{|x'|}=\frac{1}{2^{m+1}}\frac{1}{2^m}=\frac{1}{2^{2m+1}}$
+
+\newpage
 \subsection{part b}
 \subsubsection{(i)}
+Idea: "Breaking g implies breaking f"
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[every text node part/.style={align=center}]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \D^g $}
+      \newinst[4]{B}{$ \D^f $}
+      \newinst[4]{C}{$ \C^f $} % Increase "5" to widen
+      \postlevel
+      \mess{C}{$y$}{B}
+      \node[anchor=west] at (mess from) {$y=f(x)$,\\ $x := (x_1,...,x_n)$ \\$(x_1,...,x_n)\leftarrow\$U$};
+      \postlevel
+      \mess{B}{$(y,j,x_j)$}{A}
+      \node[anchor=west] at (mess from) { $j\leftarrow U_{log(n)}$ \\ $x_j\leftarrow\$\{0,1\}$ };
+      \postlevel
+      \mess{A}{$(x'||j)$}{B}
+      \node[anchor=west] at (mess to) { $g(x'||j)=y'$ };
+      \postlevel
+      \mess{B}{$x'$}{C}
+      \node[anchor=west] at (mess to) {};
+    \postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
 
-By contraddiction assume that $\exists$ a distinguisher $D^\prime_g$ that is able to invert $g$ with non negligible probability (as before).
-We will then have:
-$$ Pr[g(x^\prime || j)=z : x \leftarrow\$ \{0,1\}^n, z^\prime = g(x), |j|=log(n), x^\prime \leftarrow\$D^\prime_g(1^{\lambda},z)] \geq \frac{1}{p(\lambda)}$$
+By contraddiction assume that $\exists$ a distinguisher $D^g$ that is able to invert $g$ with non negligible probability.
+We want to use $D^g$ to break $C^f$, since $x_j$ is a bit and is chosen at random by $D^f$ it will have $Pr=\frac{1}{2}$. 
+%Then $D^g$ is not able to "invert" the function when it does not exists an $f(x)=y$ with the $x_j^{th}$ bit in position $j$ which is a sort of collision.
 
-We can also define another adversary $D^\prime_f$ which is able to invert $f$ with non negligible probability such that:
-$$ D^\prime_f(z)=(D^\prime_g(z,j,x_j))$$
-Note that $D^\prime_g$ reveals $g$ when taking $(z,j,x_j)$ as input and in the same way, $D^\prime_f$ reveals $f$ on input $z$.
-Therefore $D^\prime_f$ leaks f (on input $z$) with the same probability of $D^\prime_g$ which is non negligible. $\implies$ Contraddiction.
+The probability that $D^f$ is able to recover a valid $x'$ from $D^g$ is the probability that $D^f$ choses the right $x_j$ (evet C) and the probability that $D^g$ returns a couple $(x'||j)$ such that $g(x'||j)=(y,j,x_j)$ (event D). Then \[
+Pr[C\wedge D]=\underbrace{Pr[C]}_{\frac{1}{2}}\overbrace{Pr[D|C]}^{\geq negl(\lambda)}\geq negl(\lambda)
+\]
 
 \subsubsection{(ii)}
 
-Let $g$ be a OWF then we can define $f$ as follows:
-$$ f(U_{n+log(n)})=f(U_n,U_{log(n)})=g(U_n),U_{log(n)},[U_n]_{U_{log(n)}}$$
-where $[x\prime]_i$ denote the $i^{th}$ bit of $x\prime$.\\
-In words, $f$ receives an input of length $n+log(n)$ and outputs $g$ applied to the first $n$ bits, together with $i$ and the $i^{th}$ bit if the input ( $i$ is the value in the last $log(n)$ bits of the input).\\
-Fix $i$, we construct an $A_i$ s.t. $A_i(f(x\prime))$ outputs $x\prime _i$ with $Pr=\frac{1}{2}+\frac{1}{2n}$.
-$A_i$ receives $f(U_{n+log(n)})$ and checks the second $log n$ bits of the output:\\
-If they encode the value $i$ then $A_i$ outputs these last bits.\\
-Otherwise $A_i$ outputs a random bit $b \in {0,1}$. \\
-Now 
+Fix $i$, we construct an $A_i$ s.t. $A_i(f(x\prime))$ outputs $x\prime _i$ with $Pr=\frac{1}{2}+\frac{1}{2n}$.\\
+Now we can distinguish 2 cases:
+\begin{enumerate}
+   \item For $A_i$ where $i \in \{n+1, n+log(n)\}$, since $A_i$ can see $(f(x),j,x_j)$ he can see also $j$ and since $i$ is in that interval. A has directly the correct value to output.
+   \item For $A_i$ where $i \in \{1, n\}$, he can take $x_j$ and hopes that $j=i$.
+\end{enumerate}
 
-$$Pr[A_i(f(U_n,U_{log(n)}))=[U_n]_i]=$$
-$$=\frac{1}{2}Pr[U_{log(n)} \neq i]+1Pr[U_{log(n)}=i]=$$
-$$=\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n} > \frac{1}{2} + \frac{1}{2(n+log(n))}$$
-
-We conclude that with inputs of length $n$, $A_i$ succeeds in the guess of $A^{th}$ with $Pr$ at least $\frac{1}{2}+\frac{1}{2n}$.
-
-\todo{Now we just need to prove that $f$ is one way:\\
-Assume by contraddiction that $\exists$ a PPT adversary $A$ which can invert $f$ with non negligible probability.\
-I think we can draw a figure of the game here (and maybe also above?)}
+\noindent If we are in the first case $Pr[WIN]=1$.\\
+Otherwise: \\
+\begin{gather*}
+   Pr[WIN]=Pr[j=i]+Pr[j \neq i]=\\
+   =\frac{1}{n}1 +\underbrace{(1-\frac{1}{n})}_{Pr[j^{th} \text{index} \neq i]}\overbrace{\frac{1}{2}}^{Pr[j^{th}\text{bit}=i^{th}\text{bit}]}=\\
+   =\frac{1}{n}+\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n}
+\end{gather*}
 
 \section{Pseudorandom Generators}
 \subsection{point a}
@@ -274,8 +295,6 @@ Let's fix $G_{1}$ as our PRG without loss of generality, suppose we can build a 
                   \postlevel
                   \mess{B}{$b'$}{C}
                   \node[anchor=west] at (mess to) {  };
-            
-
 
       \sdend{}
       \sdend{}
@@ -285,16 +304,17 @@ Let's fix $G_{1}$ as our PRG without loss of generality, suppose we can build a 
 Now to distinguish between $G^*$ and $U_{\lambda+l}$ means to distinguish between $G_1$ and $U_{\lambda+l}$ (for the xor property discussed before). Hence this is a contraddiction since $G_1$ is a PRG by definition. \\ 
 The exact same proof can be repeated if $G_{2}$ is a PRG.
 
+\newpage
 \subsection{point b}
 
 We would like to optimize the seed length (i.e. use the same seed for both functions). On this point I have two considerations:
+\begin{enumerate}
+   \item The same seed can't be used since, looking at the above game, it would mean that $D$ must have access to the seed $S$ used by $C$. This is a big problem because with access to this information $D$ can compute both $G_1(S)$ and $G_2(S)$ (the PRGs are public) and therefore will win the Game with probability=1 always.
+   \item There exists an example using a specific construction of $G_{1}=G_{2} \xor 1^{\lambda} $ where $G_1$ is a PRG and therefore also $G_2$ is a PRG.
+   Hence $G^{*}(S)= G_{2}(S) \xor 1 \xor G_{2}(S) = 1$ which is not a PRG. 
+\end{enumerate}
 
-1) The same seed can't be used since, looking at the above game, it would mean that $D$ must have access to the seed $S$ used by $C$. This is a big problem because with access to this information $D$ can compute both $G_1(S)$ and $G_2(S)$ (the PRGs are public) and therefore will win the Game with probability=1 always.\\
-
-2) There exists an example using a specific construction of $G_{1}=G_{2} \xor 1^{\lambda} $ where $G_1$ is a PRG and therefore also $G_2$ is a PRG.
-Hence $G^{*}(S)= G_{2}(S) \xor 1 \xor G_{2}(S) = 1$ which is not a PRG.\\
-
-\todo{Intuition: fixed $G_1$ as the PRG: $G^*=G_1(S_0)\xor G_2(S_0)\xor G_2(S_1)$ this a PRG even when using always the same seed ($G^*=G_1(S)$) however the problem discussed in 1) remains.}
+\textbf{Intuition}: fixed $G_1$ as the PRG: $G^*=G_1(S_0)\xor G_2(S_0)\xor G_2(S_1)$ this a PRG even when using always the same seed ($G^*=G_1(S)$) however the problem discussed in 1) remains.
 
 \section{Pseudorandom Functions}
 \subsection{point a}
