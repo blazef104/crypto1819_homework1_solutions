@@ -694,7 +694,7 @@ There are few important considerations to make:
         already sent to $\C$ the attacker has to guess the $\phi$ which will be
         outputted by the final run of the $Tag_{k}(.)$ function.
 \end{itemize}
-\todo{Missing things}
+\todo{Complete oracle to ufcmva interaction}
 \subsubsection{ ii }
 To show that:
 \[
@@ -729,7 +729,49 @@ and then $\A$ wins, but this is a contraddiction.\\
 (never asked to $\C^{ufcma}$), because of the standard definition of $Game^{ufcma}$. The only way that $A$ can win, since $m^*$ must be fresh, is just if $A^{ufcmva}$ makes queries to the $O$ fixing $m^*$ and forging multiple Tags until he finds the right $\varphi^*$ for which  $b=1$.
 
 \subsubsection{ iii }
+Let's contruct our $\Pi'$ as:
+\begin{itemize}
+   \item Tag'(x)=Tag(x)||0
+   \item Vrf'(k,m,$\varphi$) executes:
+   \begin{enumerate}
+      \item Splits $\varphi$ into 2 parts: $\varphi', i$.
+      \item Uses the first part as input for Vrf(k,m,$\varphi'$) and stores the output into d.
+      \item Now if d=1 check if $i \geq 1$ and if so outputs $k[i]$, the i-th bit of the key.
+   \end{enumerate}
+\end{itemize}
 
+Since Tag'(.) does not change the original Tag function, this is till uf-cma secure.\\
+But now, for the following counterexample we can show that $\Pi'$ is not uf-cmva secure.
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{O}
+      \newinst[2.5]{B}{$ \A $}
+      \newinst[2]{C}{$\C^{ufcmva}$}
+      \postlevel
+      \mess{B}{$m$}{C}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{C}{$\varphi$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{B}{$(m,\varphi||i)$}{A}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{A}{$k[i]$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{B}{$(m^{*}, \phi^{*})$}{C}
+      \node[anchor=west] at (mess to) {  };
+      
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+To leak the key completely $A$ sends 
 
 \subsection{b}
 
@@ -769,7 +811,7 @@ I can construct a message $m^\star=(m_0,m_0\xor \phi_0)$ and a valid Tag $\varph
 In this way when the challenger will verify the message he will compute $\varphi^\star\prime=F_k(m_0\xor\varphi_0\xor\varphi_0)=F_k(m_0)=\varphi_0$. 
 And then clearly $\varphi^\star=\varphi^\star\prime$
 
-(ii)
+\subsubsection{(ii)}
 CBC-MAC using randomness as initialization vector. This isn't secure, consider the following construction:
 
 - Obtain 2 messages $m_0, m_1$ with $m_0\neq m_1$ and their tags $\varphi_0=(r_0,F_k(m_0\xor r_0)), \varphi_1=(r_1,F_k(m_1\xor r_1))$.
@@ -778,7 +820,7 @@ When the challenger will verify $\varphi^\star$ he will compute
 $\varphi^\star\prime=F_k(m_1\xor m_0\xor r_1\xor m_0)=F_k(m_1\xor r_1)=\varphi_1$
 therefore $\varphi^\star\prime=\varphi^\star$.
 
-(iii) 
+\subsubsection{(iii)}
 CBC-MAC that outputs the tag for each block $\varphi=\varphi_1,\varphi_2,...,\varphi_t$ is not secure. Consider the following construction:
 
 - Obtain 2 messages $m_0=(m_{0,1},m_{0,2}), m_1=(m_{1,1},m_{1,2})$, of at least 2 blocks, and their tags 
