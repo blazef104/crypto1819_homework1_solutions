@@ -18,7 +18,7 @@
 
 
 \title{\textbf{Cryptography Homework 1}\\ {\normalsize (Solutions)}}
-\author{Giulio Ginesi - 1480066}
+\author{Giulio Ginesi - 1840066}
 \date{}
 
 
@@ -51,7 +51,7 @@
 \end{figure}
 
 
-From our hypotesis we have that (a): $Pr[Game_{\pi,A}^{eav}=1]=\frac{1}2$ and we want to use the following notion of prefect secrecy (b): $Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $. 
+From our hypothesis we have that (a): $Pr[Game_{\pi,A}^{eav}=1]=\frac{1}2$ and we want to use the following notion of prefect secrecy (b): $Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $. 
 
 We want to prove that $a \implies b$ and also $ b \implies a $
 \\
@@ -63,8 +63,7 @@ $$ Pr[Game=1 | b=0]Pr[b=0]+Pr[Game=1 | b=1]Pr[b=1]=$$
 Since $b$ is chosen uniformly between 0 and 1 we have:
 $$=\frac{1}{2}Pr[Game=1 | b=0]+\frac{1}{2}Pr[Game=1 | b=1]=$$
 $$=\frac{1}{2}(Pr[Game=1 | b=0]+Pr[Game=1 | b=1])$$
-
-
+(I give up)
 
 \section{Universal Hashing}
  \subsection{point a}
@@ -198,7 +197,7 @@ Suppose $D^\prime$ is able to invert $G$ with non negligible probability, then $
 Upon receiving $x^\prime$ $D$ can compute $G(x^\prime)=z^\prime$.
 Now if $z^\prime=z$, $D$ will decide $b^\prime=1$ otherwise $b^\prime=0$.\\
 
-There is one case in which $D$ makes the wrong guess. Suppose that $C$ choses $z$ from uniform and this z is exactly the output of $G(.)$ with a particular $x'$ which is exactly the value given by $D'$ when it receives \\$z\leftarrow\$U_{m+1}$. This is the probability of choosing a "colliding z" times the probability of $D'$ giving as $x'$ exactly the right value for which $G(x')=z$ but $z\leftarrow\$U_{m+1}$. This happens with $Pr=\frac{1}{|z|}\frac{1}{|x'|}=\frac{1}{2^{m+1}}\frac{1}{2^m}=\frac{1}{2^{2m+1}}$
+There is one case in which $D$ makes the wrong guess. Suppose that $C$ chooses $z$ from uniform and this z is exactly the output of $G(.)$ with a particular $x'$ which is exactly the value given by $D'$ when it receives \\$z\leftarrow\$U_{m+1}$. This is the probability of choosing a "colliding z" times the probability of $D'$ giving as $x'$ exactly the right value for which $G(x')=z$ but $z\leftarrow\$U_{m+1}$. This happens with $Pr=\frac{1}{|z|}\frac{1}{|x'|}=\frac{1}{2^{m+1}}\frac{1}{2^m}=\frac{1}{2^{2m+1}}$
 
 \newpage
 \subsection{part b}
@@ -230,11 +229,11 @@ Idea: "Breaking g implies breaking f"
    \end{tikzpicture}
 \end{figure}
 
-By contraddiction assume that $\exists$ a distinguisher $D^g$ that is able to invert $g$ with non negligible probability.
+By contradiction assume that $\exists$ a distinguisher $D^g$ that is able to invert $g$ with non negligible probability.
 We want to use $D^g$ to break $C^f$, since $x_j$ is a bit and is chosen at random by $D^f$ it will have $Pr=\frac{1}{2}$. 
 %Then $D^g$ is not able to "invert" the function when it does not exists an $f(x)=y$ with the $x_j^{th}$ bit in position $j$ which is a sort of collision.
 
-The probability that $D^f$ is able to recover a valid $x'$ from $D^g$ is the probability that $D^f$ choses the right $x_j$ (evet C) and the probability that $D^g$ returns a couple $(x'||j)$ such that $g(x'||j)=(y,j,x_j)$ (event D). Then \[
+The probability that $D^f$ is able to recover a valid $x'$ from $D^g$ is the probability that $D^f$ chooses the right $x_j$ (event C) and the probability that $D^g$ returns a couple $(x'||j)$ such that $g(x'||j)=(y,j,x_j)$ (event D). Then \[
 Pr[C\wedge D]=\underbrace{Pr[C]}_{\frac{1}{2}}\overbrace{Pr[D|C]}^{\geq negl(\lambda)}\geq negl(\lambda)
 \]
 
@@ -255,6 +254,7 @@ Otherwise: \\
    =\frac{1}{n}+\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n}
 \end{gather*}
 
+\newpage
 \section{Pseudorandom Generators}
 \subsection{point a}
 
@@ -301,7 +301,7 @@ Let's fix $G_{1}$ as our PRG without loss of generality, suppose we can build a 
    \end{tikzpicture}
 \end{figure}
 
-Now to distinguish between $G^*$ and $U_{\lambda+l}$ means to distinguish between $G_1$ and $U_{\lambda+l}$ (for the xor property discussed before). Hence this is a contraddiction since $G_1$ is a PRG by definition. \\ 
+Now to distinguish between $G^*$ and $U_{\lambda+l}$ means to distinguish between $G_1$ and $U_{\lambda+l}$ (for the xor property discussed before). Hence this is a contradiction since $G_1$ is a PRG by definition. \\ 
 The exact same proof can be repeated if $G_{2}$ is a PRG.
 
 \newpage
@@ -316,6 +316,7 @@ We would like to optimize the seed length (i.e. use the same seed for both funct
 
 \textbf{Intuition}: fixed $G_1$ as the PRG: $G^*=G_1(S_0)\xor G_2(S_0)\xor G_2(S_1)$ this a PRG even when using always the same seed ($G^*=G_1(S)$) however the problem discussed in 1) remains.
 
+\newpage
 \section{Pseudorandom Functions}
 \subsection{point a}
 Consider an exponential time/unbounded distinguisher $D$ that,  
@@ -350,41 +351,20 @@ Consider an exponential time/unbounded distinguisher $D$ that,
    \end{tikzpicture}
 \end{figure}
 
-When $\D$ receives $y$, since he is efficient in computing \textit{superpoly}
-operations, he can efficiently compute all the possible $F_{k}(x), \forall k
-\in \{0,1\}^{\lambda} $.\\
-So he can efficiently win the $Game$ for each family of PRF functions.\\
+When $\D$ receives $y$, since he is unbounded, he can compute all the possible $F_{k}(x), \forall k\in \{0,1\}^{\lambda} $, in this way he can efficiently win the $Game$ for each family of PRF functions.\\
 
-\todo{Maybe here the same ideas of Note 2}
+\textbf{Note 1}: there could be sort of  "collisions" when $\C$ chooses $y= R(x)$
+but this can also be the result of $F_{k'}(x)$ but not of $F_{k}(x)$( where $k$ is the key used in the PRF experiment), for a certain $k' \in  \{0,1\}^{\lambda} $ and $k'\not= k$.\\ 
+Then, $\C$ sends $y$ to $\D$, which gives the wrong answer thinking that $\C$ is using $F_{k'}(x)=y$ while instead it is actually using $R$. \\
+Thus, after sending the related $b'$ to $\C$, $\D$ loses.\\
 
-\textbf{Note 1}: it can happen that $\C$ choses $y= R(x)$
-which is equal to $F_{k'}(x)$ but not to $F_{k}(x)$($k$ is the key that should
-be used in the PRF experiment), for a certain $k' \in  \{0,1\}^{\lambda} $ and
-$k'\not= k$.\\ 
-Then, $\C$ sends $y$ to $\A$, and $\A$, after finding $k'$ and  $F_{k'}(x)=y$,
-thinks that he is playing a \textit{PRF experiment}, while he is actually
-playing a \textit{random experiment}. \\
-Thus, after sending the related $b'$ to $\C$, $\A$ loses.\\
+There are, in the worst case, $2^{\lambda}-1$ possible common values among $F_{(.)}(x)$ and $R(x)$, the number of "hidden" keys minus the "legal" key chosen for the PRF experiment. So, the probability that $\C$, using a random function,  extracts a truly random number and not an $y=F_{k'}(x)$ for some $k'$ "hidden" key is $\frac{1}{2^{l}-(2^{\lambda}-1)}$.\\
 
-How many times this \textit{collision}  can happen? In the worst case there are
-$2^{\lambda}-1$ possible common values among $F_{(.)}(x)$ and $R(x)$, the number
-of "hidden" keys minus the "legal" key chosen for the PRF experiment. So, the
-probability that $\C$, using a random function,  extracts a truly random number
-and not an $y=F_{k'}(x)$ for some $k'$ "hidden" key is
-$\frac{1}{2^{l}-(2^{\lambda}-1)}$.\\
-The more large $l$ than $\lambda$ is, the more negligible this probability is.\\
+\textbf{Note 2}: It can happen that $\C$ chooses an $y=R(x)$ equal to $F_{k}(x)$.
+Like before, in this case $\D$ thinks he is playing with a PRF, while he is
+actually playing with a truly random function, so $\D$ loses.\\
 
-
-
-\textbf{Note 2}: It can happen that $\C$ choses an $y=R(x)$ equal to $F_{k}(x)$.
-Like before, in this case $\A$ thinks he is playing with a PRF, while he is
-actually playing with a truly random function, so $\A$ loses.\\
-
-How many times this \textit{collision}  can happen ? This happens with the
-probability of picking
-an input $x$ over $|\M|$ possible inputs times the probability of picking a
-Random function $R(.)$ which contains a collision exactly for the input $x$ over
-all the possible random functions.\\
+This is the probability of picking an input $x$ over $|\M|$ possible inputs,times the probability of picking a Random function $R(.)$ which contain all the possible random functions.\\
 Since the random functions with a table containing a collision with $F_{k}$
 over input $x$ are $ 2^{l 2^{n-1}} $, the probability of picking exactly $x$ and
 one of these random functions containing a collision over $x$ is 
@@ -393,6 +373,7 @@ one of these random functions containing a collision over $x$ is
 2^{n}}}}_{\frac{1}{2}}
 \]
 which is negligible.
+
 \subsection{point b}
 \subsubsection{i}
 
@@ -413,30 +394,20 @@ Otherwise, for a given random couple $(x, x')$, our function produces
 and it is possible to correctly guess this result with probability 1. 
 So the proposed $F_{k}(.)$ is not totally indistinguishable from a truly random
 function.
-\subsubsection{ii}
-When $F:\{0,1\}^{\lambda}*\{0,1\}^{\lambda} \to \{0,1\}^{l} $ is pseudorandom,
-it is distinguishable from the random function
-\[
-R:\{0,1\}^{\lambda} * \{0,1\}^{\lambda} \to \{0,1\}^{l} 
-\]
-just for a negligible factor.\\
 
-To prove that $F_{k}(x)=F_{x}(k)$ given is PRF, we should show that
-this property holds for every possible PRF $F$.\\
+\subsubsection{ii}
+
+To prove that $F_{k}(x)=F_{x}(k)$ given is PRF, we should show that this property holds for every possible PRF $F$.\\
 Now consider a function $F'$ with the same definition of $F$, but when $F'$
 receives $k=t$ for a fixed $t \leftarrow\$ \{0,1\}^{\lambda} $ it always outputs
 $1^{l}$, no matter of what is given as second argument.\\
 
-Since $F'$ behaves like $F$ but for inputs starting with $t$ as prefix, it is
-indistinguishable from $R$ until one yields one of these $t-$strings.
-Since among all the strings long $\lambda + \lambda$ bits there are $\lambda$
-strings which start with the prefix $t$, 
+Since $F'$ behaves like $F$ but for inputs $t$, it is indistinguishable from $R$ until one yields one of these $t-$strings. Since among all the strings of $\lambda + \lambda$ bits there are $\lambda$ strings in which the first part is exactly $t$, 
 \[
-    \P [ \text{ Pick at random a $\lambda + \lambda$ string starting with $t$}
+    \P [ \text{ Pick at random a $\lambda + \lambda$ string "starting" with $t$}
     ]= \frac{1}{2^{\lambda}}  
 \]
-so $F'$ is distinguishable from $R$ for the negligible factor as for $F$ and for
-this negligible factor related to picking $t-$strings at random.
+so $F'$ is distinguishable from $R$ for the same factor as  $F$ and for a negligible factor related to picking the "crashing strings"(defined before) at random.
 So we can say that $F'$ is a PRF.\\
 
 But now if an attacker sends $t$ to the challenger who uses $F_{k}(x)=F_{x}(k)$,
@@ -450,8 +421,8 @@ given input).
 Let's suppose that , given the PRF $F:\{0,1\}^{n} \to \{0,1\}^{n}$, there
 exists a distinguisher $D'$ which can distinguish $F':\{0,1\}^{n-1} \to
 \{0,1\}^{2n} $ from a truly random function $R:\{0,1\}^{n-1} \to
-\{0,1\}^{2n} $.
-But if this is possible, then we have 
+\{0,1\}^{2n} $.\\
+But if this is possible, then we have:
 
 \begin{figure}[h!]
    \centering
@@ -505,7 +476,8 @@ so we could break the PRF function $F_{k}$, which is impossible by definition.
 \newpage
 \section{Secret Key Encryption}
 \subsection{point a}
-We can build a counterexample, to show that this construction is not secure:
+
+Consider the following counterexample:
 
 \begin{figure}[h!]
    \centering
@@ -516,7 +488,6 @@ We can build a counterexample, to show that this construction is not secure:
       \newinst[6]{B}{$ \C $}
             \postlevel
         
-            
             \mess{A}{$\overbrace{ v_{1} \xor v_{2}, m_{2_{1}}, \ldots,
                 m_{t_{1}}}^{m_{1}^{*}}, \overbrace{v_{1}, m_{2_{1}}, \ldots,
         m_{t_{1}}}^{m_{2}^{*}}$}{B}
@@ -547,23 +518,20 @@ We can build a counterexample, to show that this construction is not secure:
       \sdend{}
    \end{tikzpicture}
 \end{figure}
-But $P_{k}^{-1}(c_{1})=c_{0} \xor m_{1_{b}}$.\\
+But $P_{k}^{-1}(c_{1})=c_{0} \xor m_{1_{b}}$. So:
 
-So:
 \begin{itemize}
-    \item if $b=1$, the received $m_{1}$  contains  $\not c_{0} \xor v_{1} \xor
-        \not v_{2} \xor \not c_{0} \xor \not v_{2}= v_{1} $
-    \item if $b=2$ the received $m_{1}$ contains $ \not c_{0} \xor v_{1} \xor
-        \not c_{0} \xor v_{2}= v_{1} \xor v_{2}$
+    \item if $b=1$, the received $m_{1}$  contains  $c_{0} \xor v_{1} \xor v_{2} \xor c_{0} \xor v_{2}= v_{1} $
+    \item if $b=2$ the received $m_{1}$ contains $c_{0} \xor v_{1} \xor c_{0} \xor v_{2}= v_{1} \xor v_{2}$
 \end{itemize}
 So looking in the first block of the last query we can understand which block
-was chosen as first, and we can deduce which message was encrypted (since
-$m_{1}^{*}$ and $m_{2}^{*}$ are equal but for the first block).
+was chosen as first, and we can deduce which message was encrypted since
+$m_{1}^{*}$ and $m_{2}^{*}$ share all the blocks except the first.
+
 \newpage
 \subsection{point b}
 
-We have the following game as a counterexample for the CCA-security of OFB mode:
-
+Consider the following counterexample:
 
 \begin{figure}[h!]
    \centering
@@ -591,7 +559,7 @@ We have the following game as a counterexample for the CCA-security of OFB mode:
  }};
 
       \postlevel
-      \mess{A}{$r_{0}, c_{1} \xor v, \ldots, c_{t} \xor v $}{B}
+      \mess{A}{$r^*_{0}, c^*_{1} \xor v, \ldots, c^*_{t} \xor v $}{B}
       \node[anchor=east] at (mess from) {  };
       \postlevel
       \mess{B}{$m_{1}, \ldots, m_{t}$}{A}
@@ -610,11 +578,12 @@ Now there are 2 possibilities:
 \begin{itemize}
     \item if $b=1$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i} \xor
         v}^{c_{i}} \xor v=m_{i}$
-    \item if $b=0$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i}}^{c_{i}}
+    \item if $b=2$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i}}^{c_{i}}
         \xor v = m_{i} \xor v$
 \end{itemize}
-and this allows the Attacker to understand which message was took for
+and this allows the Attacker to understand which message was chosen for
 encryption.
+
 \newpage
 \section{Message Authentication}
 \subsection{ point a}
@@ -688,12 +657,9 @@ There are few important considerations to make:
             wins only if the re-computed tag is exactly the same as $\phi^{*}$
     \item the oracle tells $b=1$ if $\phi_{j}$ is in the set of possible values
         computed by $Tag_{k}(m_{j})$
-    \item since, when the challenge happens, the verification of $\phi^{*}$ is
-        done recomputing $\phi \leftarrow\$ Tag_{k}(m^{*})$, 
-        \textbf{it doesn't really matter if $m^{*}$ is fresh or not} , since even if
-        already sent to $\C$ the attacker has to guess the $\phi$ which will be
-        outputted by the final run of the $Tag_{k}(.)$ function.
+    \item since $C$ will have his own verification oracle, identical to $O$ the couple $(m^*,\varphi^*)$ must be fresh for $C$. Meaning that $\varphi^*$ should not be an output of $C$ for a non fresh $m^*$. 
 \end{itemize}
+
 \subsubsection{ ii }
 To show that:
 \[
@@ -731,7 +697,7 @@ To show that:
       \sdend{}
    \end{tikzpicture}
 \end{figure}
-and then $\A$ wins, but this is a contraddiction.\\
+and then $\A$ wins, but this is a contradiction.\\
 
 \textbf{Note:} the last message $\A$ sends to $\C^{ufcma}$ should be fresh
 (never asked to $\C^{ufcma}$), because of the standard definition of
@@ -739,7 +705,7 @@ $Game^{ufcma}$. The only way that $A$ can win, since $m^*$ must be fresh, is
 just if $A^{ufcmva}$ makes queries to the $O$ fixing $m^*$ and forging multiple
 Tags until he finds the right $\phi^*$ for which  $b=1$.  \newpage
 \subsubsection{ iii }
-Given $\Pi=(Tag, Vrfy)$ , let's contruct our $\Pi'=(Tag', Vrfy')$ as:
+Given $\Pi=(Tag, Vrfy)$ , let's construct our $\Pi'=(Tag', Vrfy')$ as:
 \begin{itemize}
    \item $Tag'(x)=Tag(x)\|0$
    \item $Vrfy'(k,m,\phi')$ executes:
@@ -752,8 +718,8 @@ Given $\Pi=(Tag, Vrfy)$ , let's contruct our $\Pi'=(Tag', Vrfy')$ as:
    \end{enumerate}
 \end{itemize}
 
-Since $Tag'(.)$ does not change the original $Tag()$ function, this is till uf-cma secure.\\
-But now, for the following counterexample we can show that $\Pi'$ is not uf-cmva secure.
+Since $Tag'(.)$ does not change the original $Tag(.)$ function, this is till ufcma secure.\\
+But now, for the following counterexample we can show that $\Pi'$ is not ufcmva secure.
 
 \begin{figure}[h!]
    \centering
@@ -791,7 +757,7 @@ query a specific bit of the key.\\
 In particular, every new query to the oracle contains an incremental value of
 $i$ until $|k|$, so the key is completely discovered after $|k|$ queries.\\
 
-In the end, $\A$ simply choses a fresh random message $m^{*}$, uses the key for
+In the end, $\A$ simply chooses a fresh random message $m^{*}$, uses the key for
 computing $Tag_{k}(m^{*})=\phi^{*}$ and sends this couple to the challenger,
 being sure of winning.
 
@@ -828,7 +794,7 @@ Consider the following game form a generic CBC-MAC:
 \subsubsection{(i)}
 CBC-MAC for VLM is not secure. Consider the following construction:
 
-- Obtain a message $m_0\leftarrow\$\{0,1\}^n$ of 1 block and his Tag $\varphi_0 =F_k(m_0)$
+Obtain a message $m_0\leftarrow\$\{0,1\}^n$ of 1 block and his Tag $\varphi_0 =F_k(m_0)$
 I can construct a message $m^\star=(m_0,m_0\xor \phi_0)$ and a valid Tag $\varphi^\star=\varphi_0$.
 In this way when the challenger will verify the message he will compute $\varphi^\star\prime=F_k(m_0\xor\varphi_0\xor\varphi_0)=F_k(m_0)=\varphi_0$. 
 And then clearly $\varphi^\star=\varphi^\star\prime$
@@ -836,7 +802,7 @@ And then clearly $\varphi^\star=\varphi^\star\prime$
 \subsubsection{(ii)}
 CBC-MAC using randomness as initialization vector. This isn't secure, consider the following construction:
 
-- Obtain 2 messages $m_0, m_1$ with $m_0\neq m_1$ and their tags $\varphi_0=(r_0,F_k(m_0\xor r_0)), \varphi_1=(r_1,F_k(m_1\xor r_1))$.
+Obtain 2 messages $m_0, m_1$ with $m_0\neq m_1$ and their tags $\varphi_0=(r_0,F_k(m_0\xor r_0)), \varphi_1=(r_1,F_k(m_1\xor r_1))$.
 I can now forge a new message $m^\star=(m_0\xor m_1)$ and a valid Tag $\varphi^\star=(r_1\xor m_0, \varphi_1)$.
 When the challenger will verify $\varphi^\star$ he will compute
 $\varphi^\star\prime=F_k(m_1\xor m_0\xor r_1\xor m_0)=F_k(m_1\xor r_1)=\varphi_1$
@@ -845,7 +811,7 @@ therefore $\varphi^\star\prime=\varphi^\star$.
 \subsubsection{(iii)}
 CBC-MAC that outputs the tag for each block $\varphi=\varphi_1,\varphi_2,...,\varphi_t$ is not secure. Consider the following construction:
 
-- Obtain 2 messages $m_0=(m_{0,1},m_{0,2}), m_1=(m_{1,1},m_{1,2})$, of at least 2 blocks, and their tags 
+Obtain 2 messages $m_0=(m_{0,1},m_{0,2}), m_1=(m_{1,1},m_{1,2})$, of at least 2 blocks, and their tags 
 $\varphi_0=(\varphi_{0,1},\varphi_{0,2}), \varphi_1=(\varphi_{1,1},\varphi_{1,2})$. Now i can construct 
 $m^\star=(m_{1,1}, m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1})$ and a valid Tag 
 $\varphi^\star=(\varphi_{1,1}, \varphi_{2,2})$. When the challenger will verify $\varphi^\star$ he will compute
