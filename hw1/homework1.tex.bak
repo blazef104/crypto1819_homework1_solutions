@@ -1,0 +1,821 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{framed}
+\usepackage{amsmath}
+\input{macro.tex}
+
+\newcounter{t0d0_counter}
+\newcommand{\notodo}[1]{
+}
+\newcommand{\todo}[1]{
+  \stepcounter{t0d0_counter}
+  \definecolor{shadecolor}{rgb}{1,1,0} % this is yellow
+  \begin{shaded}
+  T0D0 \arabic{t0d0_counter}: #1
+  \end{shaded}
+}
+
+
+\title{\textbf{Cryptography Homework 1}\\ {\normalsize (Solutions)}}
+\author{Giulio Ginesi - 1840066}
+\date{}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{Perfect Secrecy}
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[every text node part/.style={align=center}, scale=0.7]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \A $}
+      \newinst[4]{B}{$ \C $}
+      \postlevel
+      \mess{A}{$(m_0,m_1)$}{B}
+      \postlevel
+      \mess{B}{$c$}{A}
+      \node[anchor=west] at (mess from) { $k\leftarrow\$ K, b\leftarrow\$\{0,1\}$\\ $c=Enc(k,m_b)$ };
+      \postlevel
+      \mess{A}{$b'$}{B}
+      \node[anchor=west] at (mess to) { output 1 IFF $b'=b$ };
+      \postlevel
+    \postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+
+From our hypotesis we have that (a): $Pr[Game_{\pi,A}^{eav}=1]=\frac{1}2$ and we want to use the following notion of prefect secrecy (b): $Pr[Enc(K,m_0)=c]=Pr[Enc(K,m_1)=c] $. 
+
+We want to prove that $a \implies b$ and also $ b \implies a $
+\\
+For the first part $a \implies b$:
+
+The notion (a) can be rewritten as 
+
+$$ Pr[Game=1 | b=0]Pr[b=0]+Pr[Game=1 | b=1]Pr[b=1]=$$
+Since $b$ is chosen uniformly between 0 and 1 we have:
+$$=\frac{1}{2}Pr[Game=1 | b=0]+\frac{1}{2}Pr[Game=1 | b=1]=$$
+$$=\frac{1}{2}(Pr[Game=1 | b=0]+Pr[Game=1 | b=1])$$
+(I give up)
+
+\section{Universal Hashing}
+ \subsection{point a}
+ \subsubsection{(i)}
+ We can prove that $t-wise \implies (t-1)-wise$ just by writing down the notion of $t$-wise independence.
+
+ $$ \sum_{i=0}^t{Pr[h_s(x_i)=y_i]} = \sum_{i=0}^{t-1}{(Pr[h_s(x_i)=y_i])}+Pr[h_s(x_t)=y_t]$$
+
+ From the above equation we can see that the $t-1$-wise independence is contained in the $t$ wise one. 
+
+ \subsubsection{(ii)} $$ Pr[h_s(x_0)=y \wedge h_s(x_1)=y \wedge h_s(x_2)=y] = \frac{1}{|y^3|} $$
+      
+Now for 3 different x: $x_0 \neq x_1 \neq x_2$ the corresponding hash functions are as follows:
+
+$$ h_s(x_0) = S_0 + S_1x_0 + S_2x_0^2 $$
+$$ h_s(x_1) = S_0 + S_1x_1 + S_2x_1^2 $$
+$$ h_s(x_2) = S_0 + S_1x_2 + S_2x_2^2 $$
+
+$$ Pr_{(S_0,S_1,S_2)\gets Z_q^3}[h(x_0)= \varphi \wedge h(x_1)=\varphi \prime \wedge h(x_2)=\varphi \prime \prime]=$$
+
+$$=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[S_0+S_1x_0+S_2x_0^2=\varphi \wedge S_0+S_1x_1+S_2x_1^2=\varphi \prime \wedge S_0+S_1x_2+S_2x_2^2=\varphi \prime \prime]=$$
+
+
+\[
+=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[
+\begin{pmatrix}
+	1 & x_0 & x_0^2 \\
+	1 & x_1 & x_1^2 \\
+	1 & x_2 & x_2^2
+\end{pmatrix}
+\cdot
+\begin{pmatrix}
+	S_0 \\
+	S_1\\
+	S_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+\varphi \\
+\varphi \prime \\
+\varphi \prime \prime
+\end{pmatrix}
+]=
+\]
+
+\[
+=Pr_{(S_0,S_1,S_2)\gets Z_q^3}[
+\begin{pmatrix}
+	S_0 \\
+	S_1\\
+	S_2
+\end{pmatrix}
+=
+\begin{pmatrix}
+	1 & x_0 & x_0^2 \\
+	1 & x_1 & x_1^2 \\
+	1 & x_2 & x_2^2
+\end{pmatrix}^{-1}
+\cdot
+\begin{pmatrix}
+\varphi \\
+\varphi \prime \\
+\varphi \prime \prime
+\end{pmatrix}
+]=
+\]
+
+$$= \frac{1}{|Z_q^3|}=\frac{1}{q^3}$$
+
+\subsection{part b}
+\subsubsection{(i)}
+
+$l = 128 $ what is the minimal min-entropy to achieve $\varepsilon = 2^{-80}$?
+
+$$128 \leq k-(2log2^{80} -2)$$
+$$k \geq 286$$
+
+Entropy loss: $\delta = 158$
+
+\subsubsection{(ii)}
+
+If $ k = 238 $ what is the maximum amount of uniform randomness with $\varepsilon = 2^{-80}$?
+
+$$l \leq 238-(2log2^{80}-2)$$
+$$l \leq 80$$
+
+Making computational assumptions explain how to obtain $ l = 320 $
+
+Let's assume a large enough $\varepsilon = 2^{-128}$ then our $k$ will be:
+$$320 \leq k - (2log2^{128}-2)$$    
+$$k \geq 574$$ 
+
+How can we obtain $l=320$ using computational assumptions?
+$$320\leq k-(2log(\frac{1}{\varepsilon})-2)$$
+I assume a large enough $\varepsilon=2^{-128}$ 
+$$320\leq k-(2*128-2)$$
+$$320\leq k-254$$
+$$k\geq574$$
+
+\newpage
+\section{One-Way Functions}
+\subsection{part a}
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=0.7]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \D^{\prime(prg)} $}
+      \newinst[4]{B}{$ \D $}
+      \newinst[4]{C}{$ \C^{prg} $} % Increase "5" to widen
+      \postlevel
+      \mess{C}{$z$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \node[anchor=west] at (mess from) {$z=G(x)$ or $z=U_{m+1}$};
+      \postlevel
+      \mess{B}{$z$}{A}
+      \postlevel
+      \mess{A}{$x^\prime$}{B}
+      \node[anchor=west] at (mess to) { $G(x')=z'$ };
+      \postlevel
+      \mess{B}{$b^\prime$}{C}
+      \node[anchor=west] at (mess to) {  };
+    \postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+Suppose $D^\prime$ is able to invert $G$ with non negligible probability, then $D$ can distinguish in poly time if $z$ comes from $G$ or $U_{n+1}$. 
+Upon receiving $x^\prime$ $D$ can compute $G(x^\prime)=z^\prime$.
+Now if $z^\prime=z$, $D$ will decide $b^\prime=1$ otherwise $b^\prime=0$.\\
+
+There is one case in which $D$ makes the wrong guess. Suppose that $C$ choses $z$ from uniform and this z is exactly the output of $G(.)$ with a particular $x'$ which is exactly the value given by $D'$ when it receives \\$z\leftarrow\$U_{m+1}$. This is the probability of choosing a "colliding z" times the probability of $D'$ giving as $x'$ exactly the right value for which $G(x')=z$ but $z\leftarrow\$U_{m+1}$. This happens with $Pr=\frac{1}{|z|}\frac{1}{|x'|}=\frac{1}{2^{m+1}}\frac{1}{2^m}=\frac{1}{2^{2m+1}}$
+
+\newpage
+\subsection{part b}
+\subsubsection{(i)}
+Idea: "Breaking g implies breaking f"
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[every text node part/.style={align=center}]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \D^g $}
+      \newinst[4]{B}{$ \D^f $}
+      \newinst[4]{C}{$ \C^f $} % Increase "5" to widen
+      \postlevel
+      \mess{C}{$y$}{B}
+      \node[anchor=west] at (mess from) {$y=f(x)$,\\ $x := (x_1,...,x_n)$ \\$(x_1,...,x_n)\leftarrow\$U$};
+      \postlevel
+      \mess{B}{$(y,j,x_j)$}{A}
+      \node[anchor=west] at (mess from) { $j\leftarrow U_{log(n)}$ \\ $x_j\leftarrow\$\{0,1\}$ };
+      \postlevel
+      \mess{A}{$(x'||j)$}{B}
+      \node[anchor=west] at (mess to) { $g(x'||j)=y'$ };
+      \postlevel
+      \mess{B}{$x'$}{C}
+      \node[anchor=west] at (mess to) {};
+    \postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+By contraddiction assume that $\exists$ a distinguisher $D^g$ that is able to invert $g$ with non negligible probability.
+We want to use $D^g$ to break $C^f$, since $x_j$ is a bit and is chosen at random by $D^f$ it will have $Pr=\frac{1}{2}$. 
+%Then $D^g$ is not able to "invert" the function when it does not exists an $f(x)=y$ with the $x_j^{th}$ bit in position $j$ which is a sort of collision.
+
+The probability that $D^f$ is able to recover a valid $x'$ from $D^g$ is the probability that $D^f$ choses the right $x_j$ (evet C) and the probability that $D^g$ returns a couple $(x'||j)$ such that $g(x'||j)=(y,j,x_j)$ (event D). Then \[
+Pr[C\wedge D]=\underbrace{Pr[C]}_{\frac{1}{2}}\overbrace{Pr[D|C]}^{\geq negl(\lambda)}\geq negl(\lambda)
+\]
+
+\subsubsection{(ii)}
+
+Fix $i$, we construct an $A_i$ s.t. $A_i(f(x\prime))$ outputs $x\prime _i$ with $Pr=\frac{1}{2}+\frac{1}{2n}$.\\
+Now we can distinguish 2 cases:
+\begin{enumerate}
+   \item For $A_i$ where $i \in \{n+1, n+log(n)\}$, since $A_i$ can see $(f(x),j,x_j)$ he can see also $j$ and since $i$ is in that interval. A has directly the correct value to output.
+   \item For $A_i$ where $i \in \{1, n\}$, he can take $x_j$ and hopes that $j=i$.
+\end{enumerate}
+
+\noindent If we are in the first case $Pr[WIN]=1$.\\
+Otherwise: \\
+\begin{gather*}
+   Pr[WIN]=Pr[j=i]+Pr[j \neq i]=\\
+   =\frac{1}{n}1 +\underbrace{(1-\frac{1}{n})}_{Pr[j^{th} \text{index} \neq i]}\overbrace{\frac{1}{2}}^{Pr[j^{th}\text{bit}=i^{th}\text{bit}]}=\\
+   =\frac{1}{n}+\frac{1}{2}(1-\frac{1}{n})=\frac{1}{2}+\frac{1}{2n}
+\end{gather*}
+
+\newpage
+\section{Pseudorandom Generators}
+\subsection{point a}
+
+The two functions $G_{1}$ and $G_{2}$ have two different distributions over
+$\{0,1\}^{\lambda + l}$, since one of the two is indistinguishable from uniform
+distribution while the other one is not.
+
+Intuitively we can state that the XOR operation preserves the distribution, and therefore the randomness (as we have done when demonstrating OTP). For this reason $G_{1}(.) \xor G_{2}(.)$ has uniform distribution if one of the two is uniformly distributed.
+
+For our problem let's create our new function $G^*$ as: 
+$$G^{*}(S_1, S_2)=G_{1}(S_1) \xor G_{2}(S_2)$$
+where the seeds $(S_1, S_2) $ are sampled at random over $\lambda$ and $S_1 \neq S_2$.\\
+
+Let's fix $G_{1}$ as our PRG without loss of generality, suppose we can build a PPT distinguisher which is able to tell apart $G_1$ and $U_{\lambda+l}$:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \D' $}
+      \newinst[4]{B}{$ \D $}
+      \newinst[2]{C}{$C^{prg}$}
+      \postlevel
+      \mess{C}{$z$}{B}
+      \node[anchor=west] at (mess from) {\shortstack[l]{
+            $ z=G_{1}(S_0),$ for $ S_0 \leftarrow\$ U_{\lambda}$ 
+            \\or\\
+            $ z \leftarrow\$ U_{\lambda + l} $
+    }};
+
+      \postlevel
+      \mess{B}{$G^{*}=z\xor G_{2}(S_1)$}{A}
+      \node[anchor=west] at (mess from) { $S_1\leftarrow\$ U_{\lambda}$ };
+            \postlevel
+            \mess{A}{$b'$}{B}
+            \node[anchor=west] at (mess to) {  };
+                  \postlevel
+                  \mess{B}{$b'$}{C}
+                  \node[anchor=west] at (mess to) {  };
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+Now to distinguish between $G^*$ and $U_{\lambda+l}$ means to distinguish between $G_1$ and $U_{\lambda+l}$ (for the xor property discussed before). Hence this is a contraddiction since $G_1$ is a PRG by definition. \\ 
+The exact same proof can be repeated if $G_{2}$ is a PRG.
+
+\newpage
+\subsection{point b}
+
+We would like to optimize the seed length (i.e. use the same seed for both functions). On this point I have two considerations:
+\begin{enumerate}
+   \item The same seed can't be used since, looking at the above game, it would mean that $D$ must have access to the seed $S$ used by $C$. This is a big problem because with access to this information $D$ can compute both $G_1(S)$ and $G_2(S)$ (the PRGs are public) and therefore will win the Game with probability=1 always.
+   \item There exists an example using a specific construction of $G_{1}=G_{2} \xor 1^{\lambda} $ where $G_1$ is a PRG and therefore also $G_2$ is a PRG.
+   Hence $G^{*}(S)= G_{2}(S) \xor 1 \xor G_{2}(S) = 1$ which is not a PRG. 
+\end{enumerate}
+
+\textbf{Intuition}: fixed $G_1$ as the PRG: $G^*=G_1(S_0)\xor G_2(S_0)\xor G_2(S_1)$ this a PRG even when using always the same seed ($G^*=G_1(S)$) however the problem discussed in 1) remains.
+
+\newpage
+\section{Pseudorandom Functions}
+\subsection{point a}
+Consider an exponential time/unbounded distinguisher $D$ that,  
+\[
+\forall \F=\{ F_{k}:
+    \{0,1\}^{n(\lambda)} \to \{0,1\}^{l(\lambda)}\}_{k \in \{0,1\}^{\lambda} }
+\]
+ plays the PRF game with this family of functions :
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \D $}
+      \newinst[4]{B}{$ \C^{prf} $}
+            \postlevel
+            \mess{A}{$x$}{B}
+            \node[anchor=west] at (mess to) {  };
+           \postlevel
+           \mess{B}{$y$}{A}
+           \node[anchor=west] at (mess from) {\shortstack[l]{
+                       $  y=F_{k}(x)  $ 
+                 \\
+         $  y=R(x), \text{for }R \leftarrow\$\R(\lambda,n, l)  $ }};
+      
+      \postlevel
+      \mess{A}{$b'$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+When $\D$ receives $y$, since he is unbounded, he can compute all the possible $F_{k}(x), \forall k\in \{0,1\}^{\lambda} $, in this way he can efficiently win the $Game$ for each family of PRF functions.\\
+
+\textbf{Note 1}: there could be sort of  "collisions" when $\C$ choses $y= R(x)$
+but this can also be the result of $F_{k'}(x)$ but not of $F_{k}(x)$( where $k$ is the key used in the PRF experiment), for a certain $k' \in  \{0,1\}^{\lambda} $ and $k'\not= k$.\\ 
+Then, $\C$ sends $y$ to $\D$, which gives the wrong answare thinking that $\C$ is using $F_{k'}(x)=y$ while instead it is actually using $R$. \\
+Thus, after sending the related $b'$ to $\C$, $\D$ loses.\\
+
+There are, in the worst case, $2^{\lambda}-1$ possible common values among $F_{(.)}(x)$ and $R(x)$, the number of "hidden" keys minus the "legal" key chosen for the PRF experiment. So, the probability that $\C$, using a random function,  extracts a truly random number and not an $y=F_{k'}(x)$ for some $k'$ "hidden" key is $\frac{1}{2^{l}-(2^{\lambda}-1)}$.\\
+
+\textbf{Note 2}: It can happen that $\C$ choses an $y=R(x)$ equal to $F_{k}(x)$.
+Like before, in this case $\D$ thinks he is playing with a PRF, while he is
+actually playing with a truly random function, so $\D$ loses.\\
+
+This is the probability of picking an input $x$ over $|\M|$ possible inputs,times the probability of picking a Random function $R(.)$ which contain all the possible random functions.\\
+Since the random functions with a table containing a collision with $F_{k}$
+over input $x$ are $ 2^{l 2^{n-1}} $, the probability of picking exactly $x$ and
+one of these random functions containing a collision over $x$ is 
+\[
+    \frac{1}{2^{n}} * \underbrace{\frac{2^{l 2^{n-1}}}{2^{l
+2^{n}}}}_{\frac{1}{2}}
+\]
+which is negligible.
+
+\subsection{point b}
+\subsubsection{i}
+
+Suppose that the proposed $F_{k}(.)$ is a PRF. This means that $F_{k}(x)$ for
+any x is indistinguishable from $R(x)$, for $R \leftarrow\$ \R(\lambda, n, l)$.\\
+Now, given a couple $(x,x')$ such that $x \not= x'$, it should be
+\textit{difficult}  to
+guess $z=R(x) \xor R(x')$, and \textit{difficult} means that, since there exists
+only one $z$ which is the output of the XOR operation, it's possible to pick the
+correct one with probability $\frac{1}{2^{l}}$.\\
+Otherwise, for a given random couple $(x, x')$, our function produces
+    \begin{gather*}
+        F_{k}(x)=x \xor G'(k) \wedge F_{k}(x')=x' \xor G'(k) \Rightarrow\\
+        \Rightarrow F_{x}(x) \xor F_{k}(x') = \\
+        x \xor G'(k) \xor x' \xor G'(k) =\\
+        =x \xor x'
+    \end{gather*}
+and it is possible to correctly guess this result with probability 1. 
+So the proposed $F_{k}(.)$ is not totally indistinguishable from a truly random
+function.
+
+\subsubsection{ii}
+
+To prove that $F_{k}(x)=F_{x}(k)$ given is PRF, we should show that this property holds for every possible PRF $F$.\\
+Now consider a function $F'$ with the same definition of $F$, but when $F'$
+receives $k=t$ for a fixed $t \leftarrow\$ \{0,1\}^{\lambda} $ it always outputs
+$1^{l}$, no matter of what is given as second argument.\\
+
+Since $F'$ behaves like $F$ but for inputs $t$, it is indistinguishable from $R$ until one yields one of these $t-$strings. Since among all the strings of $\lambda + \lambda$ bits there are $\lambda$ strings in which the first part is exactly $t$, 
+\[
+    \P [ \text{ Pick at random a $\lambda + \lambda$ string "starting" with $t$}
+    ]= \frac{1}{2^{\lambda}}  
+\]
+so $F'$ is distinguishable from $R$ for the same factor as  $F$ and for a negligible factor related to picking the "crashing strings"(defined before) at random.
+So we can say that $F'$ is a PRF.\\
+
+But now if an attacker sends $t$ to the challenger who uses $F_{k}(x)=F_{x}(k)$,
+the attacker can guess with probability 1 if he is playing in an experiment
+involving a random function or not, since if the received message from the
+challenger is $1^{l}$ the function used is $F'$ (less than a negligible factor,
+which is the probability that the random function picks exactly $1^{l}$ for the
+given input).
+\newpage
+\subsubsection{iii}
+Let's suppose that , given the PRF $F:\{0,1\}^{n} \to \{0,1\}^{n}$, there
+exists a distinguisher $D'$ which can distinguish $F':\{0,1\}^{n-1} \to
+\{0,1\}^{2n} $ from a truly random function $R:\{0,1\}^{n-1} \to
+\{0,1\}^{2n} $.\\
+But if this is possible, then we have:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \D' $}
+      \newinst[3]{B}{$ \D $}
+      \newinst[3]{C}{$\C$}
+
+            \postlevel
+            \mess{A}{$x$}{B}
+            \node[anchor=west] at (mess to) {  };
+            \postlevel
+            \mess{B}{$x\|0$}{C}
+            \node[anchor=west] at (mess to) {  };
+           \postlevel
+           \mess{C}{$y_{1}$}{B}
+           \node[anchor=west] at (mess from) {\shortstack[l]{
+                   $  y_{1}=F_{k}(x\|0)  $ 
+                 \\
+                 $ y_{1} \leftarrow\$ U_{n} $ }};
+            \postlevel
+            \mess{B}{$x\|1$}{C}
+            \node[anchor=west] at (mess to) {  };
+           \postlevel
+           \mess{C}{$y_{2}$}{B}
+           \node[anchor=west] at (mess from) {\shortstack[l]{
+                   $  y_{2}=F_{k}(x\|1)  $ if $F_{k}$ previously used
+                 \\
+                 $ y_{2} \leftarrow\$ U_{n} $ otherwise }};
+      
+      \postlevel
+      \mess{B}{$y_{1}\|y_{2}$}{A}
+      \node[anchor=west] at (mess to) {  };
+
+            \postlevel
+            \mess{A}{$b'$}{B}
+            \node[anchor=west] at (mess to) {  };
+      
+            \postlevel
+            \mess{B}{$b'$}{C}
+            \node[anchor=west] at (mess to) {  };
+
+            \sdend{}((
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+so we could break the PRF function $F_{k}$, which is impossible by definition.
+
+\newpage
+\section{Secret Key Encryption}
+\subsection{point a}
+
+Consider the following counterexample:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$\A$}
+      \newinst[6]{B}{$ \C $}
+            \postlevel
+        
+            \mess{A}{$\overbrace{ v_{1} \xor v_{2}, m_{2_{1}}, \ldots,
+                m_{t_{1}}}^{m_{1}^{*}}, \overbrace{v_{1}, m_{2_{1}}, \ldots,
+        m_{t_{1}}}^{m_{2}^{*}}$}{B}
+            \node[anchor=east] at (mess from) {$v_{1}, v_{2}\not=0^{n} \leftarrow\$ \M $  };
+                  \postlevel
+              \mess{B}{$\overbrace{c_{0}, c_{1}, \ldots, c_{t}}^{c^{*}}$}{A}
+                  \node[anchor=west] at (mess from) {\shortstack[l]{
+                              $b \leftarrow\$ \{1,2\} 
+                              $
+                              \\
+                  		$ c_{0} \leftarrow\$ \{0,1\}^{n} 
+                  		   $ 
+                        \\
+                $  c_{i}=P_{k}(c_{i-1} \xor m_{i_{b}})  $ }};
+                 \postlevel
+                 \mess{A}{$c_{0} \xor v_{2}, c_{1} , \ldots, c_{t-1}, c_{t} $}{B}
+                 \node[anchor=west] at (mess to) {  };
+
+                       \postlevel
+                       \mess{B}{$m_{1}, m_{2}, \ldots, m_{t}$}{A}
+                       \node[anchor=west] at (mess from) {\shortstack[l]{
+                                   $ m_{i}= P_{k}^{-1}(c_{i}) \xor
+                                   c_{i-1} $ for $i > 1$ 
+                             \\
+                     $  m_{1}=P_{k}^{-1}(c_{1}) \xor c_{0} \xor v_{2}   $ for $i=1$ }};
+                 
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+But $P_{k}^{-1}(c_{1})=c_{0} \xor m_{1_{b}}$. So:
+
+\begin{itemize}
+    \item if $b=1$, the received $m_{1}$  contains  $c_{0} \xor v_{1} \xor v_{2} \xor c_{0} \xor v_{2}= v_{1} $
+    \item if $b=2$ the received $m_{1}$ contains $c_{0} \xor v_{1} \xor c_{0} \xor v_{2}= v_{1} \xor v_{2}$
+\end{itemize}
+So looking in the first block of the last query we can understand which block
+was chosen as first, and we can deduce which message was encrypted since
+$m_{1}^{*}$ and $m_{2}^{*}$ share all the blocks except the first.
+
+\newpage
+\subsection{point b}
+
+Consider the following counterexample:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{$ \A $}
+      \newinst[6]{B}{$ \C $}
+      \postlevel
+      \mess{A}{$\overbrace{ m_{1} \xor v , m_{2} \xor v, \ldots,
+              m_{t} \xor v}^{m_{1}^{*}}, \overbrace{m_{1}, m_{2}, \ldots,
+        m_{t}}^{m_{2}^{*}} $ }{B}
+      \node[anchor=east] at (mess from) { $v \leftarrow\$ \{0,1\}^{n} 
+      $ };
+      \postlevel
+      \mess{B}{$c^{*}=r_{0}^{*}, c_{1}^{*}, \ldots, c_{t}^{*}$}{A}
+      \node[anchor=west] at (mess from) {\shortstack[l]{
+      		$b\leftarrow\$\{1, 2\} 
+      		    $ 
+            \\
+            $r_{0} \leftarrow\$ \{0,1\}^{n}, r_{i}=F_{k}(r_{i-1}) 
+             $
+         \\
+         $c_{i}= r_{i} \xor m_{i_{b}}$
+ }};
+
+      \postlevel
+      \mess{A}{$r^*_{0}, c^*_{1} \xor v, \ldots, c^*_{t} \xor v $}{B}
+      \node[anchor=east] at (mess from) {  };
+      \postlevel
+      \mess{B}{$m_{1}, \ldots, m_{t}$}{A}
+      \node[anchor=west] at (mess from) {\shortstack[l]{
+      		$  m_{i}=r_{i} \xor c_{i} \xor v  $ 
+            \\
+            $    $ }};
+
+
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+Now there are 2 possibilities:
+\begin{itemize}
+    \item if $b=1$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i} \xor
+        v}^{c_{i}} \xor v=m_{i}$
+    \item if $b=2$, $m_{i}= r_{i} \xor \overbrace{r_{i} \xor m_{i}}^{c_{i}}
+        \xor v = m_{i} \xor v$
+\end{itemize}
+and this allows the Attacker to understand which message was chosen for
+encryption.
+
+\newpage
+\section{Message Authentication}
+\subsection{ point a}
+\subsubsection{ i }
+It's possible to define a \textbf{UFCMVA} property for a MAC scheme $\Pi=( Tag,
+Vrfy)$ as the following one:
+
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=1]
+      \sdbegin{}
+      \newinst{A}{$ O $}
+      \newinst[4]{B}{$ \A $}
+      \newinst[4]{C}{$\C^{ufcmva}_{k \leftarrow\$ \K}$}
+
+            \postlevel
+            \mess{B}{$m_{i}$}{C}
+            \node[anchor=west] at (mess from) {\shortstack[l]{
+            		$    $ 
+                  \\
+                  $    $ }};
+
+                    \postlevel
+                    \mess{C}{$\phi_{i}$}{B}
+                    \node[anchor=west] at (mess from) {\shortstack[l]{
+                                $ \phi_{j} \leftarrow\$ Tag_{k}(m_{j})   $ 
+                           }};
+\draw [->] (6.8,-3.3) to[out=240,in=110] (6.8,-1.7);
+              
+            \postlevel
+            \mess{B}{$(m_{j},\phi_{j})$}{A}
+            \node[anchor=west] at (mess from) {\shortstack[l]{
+            		$    $ 
+                  \\
+                  $    $ }};
+      \postlevel
+      \mess{A}{$b \leftarrow \{0,1\}$}{B}
+      \node[anchor=west] at (mess to) {\shortstack[l]{
+              1 IFF $ \phi_{j} \leftarrow\$ Tag_{k}(m_{j})    $ 
+            \\
+            0 otherwise }};
+
+        \draw [->] (1.2,-5.7) to[out=240,in=110] (1.2,-4);
+\postlevel
+\postlevel
+              \postlevel
+              \mess{B}{$(m^{*}, \phi^{*})$}{C}
+              \node[anchor=west] at (mess to) {1 IFF $ \phi^{*} \leftarrow\$
+                  Tag_{k}(m^{*}) $};
+              
+      
+
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+So, if a MAC scheme is UFCMVA, the following formula must be valid for an
+attacker:
+\[
+    \P [ Game^{ufcmva}=1 ] \leq negl(\lambda)  
+\]
+There are few important considerations to make:
+\begin{itemize}
+    \item $Tag_{k}(.)$ is supposed to be a randomized function, so it returns
+        not a single value, but a set of possible values
+    \item requests to oracle and to challenger from $\A$ can happen in any
+        possible order ( not necessarily as shown in the image)
+    \item the last message is the challenge couple $(m^{*}, \phi^{*})$, which
+            wins only if the re-computed tag is exactly the same as $\phi^{*}$
+    \item the oracle tells $b=1$ if $\phi_{j}$ is in the set of possible values
+        computed by $Tag_{k}(m_{j})$
+    \item since $C$ will have his own verification oracle, identical to $O$ the couple $(m^*,\varphi^*)$ must be fresh for $C$. Meaning that $\varphi^*$ should not be an output of $C$ for a non fresh $m^*$. 
+\end{itemize}
+
+\subsubsection{ ii }
+To show that:
+\[
+   Tag \text{ has unique MACs} \wedge UFCMA \Rightarrow UFCMVA
+\]
+ let's prove it by reduction, supposing that an $\A^{ufcmva}$ adversary who can
+ break $Game^{ufcmva}$ exists:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}
+      \sdbegin{}
+      \newinst{A}{O}
+      \newinst[2.5]{B}{$ \A^{ufcmva} $}
+      \newinst[2.5]{C}{$ \A $}
+      \newinst[2]{D}{$\C^{ufcma}$}
+
+            \postlevel
+            \mess{B}{$(m^{*}, \phi')$}{A}
+            \node[anchor=west] at (mess from) {$ m^{*} \wedge \phi'$
+                random };
+                  \postlevel
+                  \mess{A}{$b \leftarrow \{0,1\}$}{B}
+                  \node[anchor=west] at (mess to) {  };
+    \draw [->] (1.2,-3.3) to[out=240,in=110] (1.2,-1.7);
+      
+      \postlevel
+      \mess{B}{$(m^{*}, \phi^{*})$}{C}
+      \node[anchor=east] at (mess from) {$O ((m^{*},\phi^{*}))=1$  };
+      \postlevel
+      \mess{C}{$(m^{*}, \phi^{*})$}{D}
+      \node[anchor=west] at (mess to) {  };
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+and then $\A$ wins, but this is a contraddiction.\\
+
+\textbf{Note:} the last message $\A$ sends to $\C^{ufcma}$ should be fresh
+(never asked to $\C^{ufcma}$), because of the standard definition of
+$Game^{ufcma}$. The only way that $A$ can win, since $m^*$ must be fresh, is
+just if $A^{ufcmva}$ makes queries to the $O$ fixing $m^*$ and forging multiple
+Tags until he finds the right $\phi^*$ for which  $b=1$.  \newpage
+\subsubsection{ iii }
+Given $\Pi=(Tag, Vrfy)$ , let's contruct our $\Pi'=(Tag', Vrfy')$ as:
+\begin{itemize}
+   \item $Tag'(x)=Tag(x)\|0$
+   \item $Vrfy'(k,m,\phi')$ executes:
+   \begin{enumerate}
+      \item Split $\phi'$ into 2 parts: $\phi \| i$.
+      \item Use the first part as input for $Vrfy(k,m,\phi)$ and store the
+          output into d.
+      \item Now if d=1 check if $i \geq 1$ and if so output $k[i]$, the i-th
+  bit of the key; otherwise, simply return $d$.
+   \end{enumerate}
+\end{itemize}
+
+Since $Tag'(.)$ does not change the original $Tag(.)$ function, this is till ufcma secure.\\
+But now, for the following counterexample we can show that $\Pi'$ is not ufcmva secure.
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=0.8]
+      \sdbegin{}
+      \newinst{A}{O}
+      \newinst[4]{B}{$ \A $}
+      \newinst[4]{C}{$\C^{ufcmva}$}
+      \postlevel
+      \mess{B}{$m$}{C}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{C}{$\phi$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{B}{$(m,\phi||i)$}{A}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{A}{$k[i]$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \draw [->] (1.2,-5.7) to[out=240,in=110] (1.2,-4);
+      \postlevel
+      \mess{B}{$(m^{*}, \phi^{*})$}{C}
+      \node[anchor=west] at (mess to) {  };
+      
+      \sdend{}
+      \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+Given the $Vrfy'$ algorithm, now $\A$ obtains a valid tag $\phi$ for $m$ and
+makes $|k|$ (length of the key $k$) queries to the oracle, to leak at every 
+query a specific bit of the key.\\
+In particular, every new query to the oracle contains an incremental value of
+$i$ until $|k|$, so the key is completely discovered after $|k|$ queries.\\
+
+In the end, $\A$ simply choses a fresh random message $m^{*}$, uses the key for
+computing $Tag_{k}(m^{*})=\phi^{*}$ and sends this couple to the challenger,
+being sure of winning.
+
+\subsection{b}
+
+Consider the following game form a generic CBC-MAC:
+
+\begin{figure}[h!]
+   \centering
+   \sdinit{}
+   \begin{tikzpicture}[scale=0.7]
+      % Define symbols and names for the parties
+      \sdbegin{}
+      \newinst{A}{$ \A $}
+      \newinst[6]{B}{$ \C $}
+      \postlevel
+      \mess{A}{$m$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+      \mess{B}{$\varphi$}{A}
+		\node[anchor=west] at (mess from) { };
+		\draw[<-] (1.2,-1.9) to[out=240,in=120] (1.2,-3.1);
+      \postlevel
+		\mess{A}{$(m^\star,\varphi^\star)$}{B}
+      \node[anchor=west] at (mess to) {  };
+      \postlevel
+		\mess{B}{$b^\prime$}{A}
+		\node[anchor=west] at (mess from) { };
+		\postlevel
+    \sdend{}
+   \end{tikzpicture}
+\end{figure}
+
+\subsubsection{(i)}
+CBC-MAC for VLM is not secure. Consider the following construction:
+
+Obtain a message $m_0\leftarrow\$\{0,1\}^n$ of 1 block and his Tag $\varphi_0 =F_k(m_0)$
+I can construct a message $m^\star=(m_0,m_0\xor \phi_0)$ and a valid Tag $\varphi^\star=\varphi_0$.
+In this way when the challenger will verify the message he will compute $\varphi^\star\prime=F_k(m_0\xor\varphi_0\xor\varphi_0)=F_k(m_0)=\varphi_0$. 
+And then clearly $\varphi^\star=\varphi^\star\prime$
+
+\subsubsection{(ii)}
+CBC-MAC using randomness as initialization vector. This isn't secure, consider the following construction:
+
+Obtain 2 messages $m_0, m_1$ with $m_0\neq m_1$ and their tags $\varphi_0=(r_0,F_k(m_0\xor r_0)), \varphi_1=(r_1,F_k(m_1\xor r_1))$.
+I can now forge a new message $m^\star=(m_0\xor m_1)$ and a valid Tag $\varphi^\star=(r_1\xor m_0, \varphi_1)$.
+When the challenger will verify $\varphi^\star$ he will compute
+$\varphi^\star\prime=F_k(m_1\xor m_0\xor r_1\xor m_0)=F_k(m_1\xor r_1)=\varphi_1$
+therefore $\varphi^\star\prime=\varphi^\star$.
+
+\subsubsection{(iii)}
+CBC-MAC that outputs the tag for each block $\varphi=\varphi_1,\varphi_2,...,\varphi_t$ is not secure. Consider the following construction:
+
+Obtain 2 messages $m_0=(m_{0,1},m_{0,2}), m_1=(m_{1,1},m_{1,2})$, of at least 2 blocks, and their tags 
+$\varphi_0=(\varphi_{0,1},\varphi_{0,2}), \varphi_1=(\varphi_{1,1},\varphi_{1,2})$. Now i can construct 
+$m^\star=(m_{1,1}, m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1})$ and a valid Tag 
+$\varphi^\star=(\varphi_{1,1}, \varphi_{2,2})$. When the challenger will verify $\varphi^\star$ he will compute
+$\varphi^\star\prime=F_k(m_{1,1}),F_k(m_{2,1}\xor\varphi_{1,1}\xor\varphi_{2,1}\xor\varphi_{1,1})=\varphi_{2,2}$
+therefore $\varphi^\star=\varphi^\star\prime$.
+
+\end{document}
